@@ -9,7 +9,7 @@ export default StyleSheet.create({
     image: {
         width:'80%',
         height: 200,
-        resizeMode: 'contain',
+        resizeMode: 'cover',
         alignSelf:'center'
     },
     input:{
