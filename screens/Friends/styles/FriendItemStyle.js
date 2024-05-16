@@ -29,5 +29,21 @@ export default StyleSheet.create({
     bottomText: {
         color: palette.light,
         marginTop: 10
+    },
+    chip: {
+        padding: 5,
+        borderRadius: 5,
+    },
+    bottomContent: {
+        flexDirection:'row',
+        justifyContent:"space-between",
+        alignItems:'center'
+    },
+    chipText: {
+        color: palette.light
+    },
+    btns: {
+        flexDirection:'row',
+    
     }
 })

@@ -1,9 +1,7 @@
 import { 
     Image, 
-    Text, 
     View, 
     TextInput,
-    Pressable, 
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
     Keyboard,
@@ -14,7 +12,6 @@ import { useState } from "react";
 import styles from './styles/Login';
 import EText from "../../global-components/EText/EText";
 import palette from "../../global-components/palette";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 
