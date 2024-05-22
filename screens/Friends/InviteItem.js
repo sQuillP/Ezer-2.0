@@ -5,7 +5,7 @@ import palette from "../../global-components/palette";
 
 
 
-export default function InviteItem({invite, sent, last=false,}) {
+export default function InviteItem({invite, onShowConfirmModal, sent, last=false,}) {
 
 
     console.log(invite)
@@ -28,7 +28,7 @@ export default function InviteItem({invite, sent, last=false,}) {
                                     <View style={styles.chip}><EText style={styles.chipText}>Pending</EText></View>
                                     ): (
                                         <View style={styles.btns}>
-                                            <Pressable style={[{marginRight: 10}]} onPress={()=> console.log("rejecting")}>
+                                            <Pressable style={[{marginRight: 10}]} onPress={()=> onShowConfirmModal(true)}>
                                                 <View style={[styles.chip, {backgroundColor: palette.error}]}>
                                                     <EText style={[styles.chipText]}>Reject</EText>
                                                 </View>

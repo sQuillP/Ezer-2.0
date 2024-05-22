@@ -7,7 +7,7 @@ import { useState } from "react";
 import palette from "../../global-components/palette";
 import ListEmptyComponent from "./ListEmptyComponent";
 
-export default function InviteList({sentInvites, receivedInvites}) {
+export default function InviteList({sentInvites, receivedInvites, onShowConfirmModal}) {
 
     console.log(sentInvites, receivedInvites)
 
@@ -24,8 +24,8 @@ export default function InviteList({sentInvites, receivedInvites}) {
     return (
         <SectionList
             sections={[
-                // {title:"Sent Invites", data:[]},
-                // {title:"Received Invites", data: []}
+                {title:"Sent Invites", data: sentInvites},
+                {title:"Received Invites", data: receivedInvites}
             ]}
             keyExtractor={item => item.dateJoined}
             renderSectionHeader={({section:{title}})=> {
@@ -42,7 +42,7 @@ export default function InviteList({sentInvites, receivedInvites}) {
                     tintColor={palette.light}
                 />
             }
-            contentContainerStyle={{paddingHorizontal: 20, flex: 1}}
+            contentContainerStyle={{paddingHorizontal: 20}}
             ListEmptyComponent={
                 <ListEmptyComponent title={"Looks like there are no invites..."}/>
             }
@@ -52,6 +52,7 @@ export default function InviteList({sentInvites, receivedInvites}) {
                         sent={false}
                         last={index === section.data.length-1}
                         invite={item}
+                        onShowConfirmModal={onShowConfirmModal}
                     />
                 )
             }}

@@ -1,48 +1,45 @@
 import { Modal, View, Pressable } from "react-native";
-import styles from './styles/ConfirmModalStyles';
-import EText from "../../global-components/EText/EText";
-import palette from "../../global-components/palette";
+import styles from './styles/CustomModalStyle';
+import EText from "../EText/EText";
+import palette from "../palette";
 
-export default function ConfirmModal({visible, onRequestClose}) {
+export default function CustomModal({modalProps,title, confirmText, declineText}) {
 
 
-    function onConfirmNotification() {
+    function onConfirmPress() {
         console.log('some business logic');
-        onRequestClose();
+        modalProps.onRequestClose();
     }
 
     return (
         <Modal
-            visible={visible}
-            onRequestClose={onRequestClose}
-            transparent={true}
-            animationType="slide"
+            {...modalProps}
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <EText style={styles.modalText}>Are you want to alert your friends?</EText>
+                    <EText style={styles.modalText}>{title}</EText>
                     <View style={{flexDirection:'row'}}>
                         <Pressable
                         style={[{marginRight:10, }]}
-                        onPress={onConfirmNotification}>
+                        onPress={onConfirmPress}>
                             {
                                 ({pressed})=> {
                                     return (
                                         <View style={[styles.button, {backgroundColor:  pressed? palette.darkgreen :palette.green}]}>
-                                            <EText style={styles.textStyle}>Yes, notify</EText>
+                                            <EText style={styles.textStyle}>{confirmText}</EText>
                                         </View>
                                     )
                                 }
                             }
                         </Pressable>
                         <Pressable
-                            onPress={onRequestClose}
+                            onPress={modalProps.onRequestClose}
                         >
                             {
                                 ({pressed})=> {
                                     return (
                                         <View style={[styles.button, {backgroundColor: pressed ? palette.darkerror:palette.error}]}>
-                                            <EText style={styles.textStyle}>Actually, No</EText>
+                                            <EText style={styles.textStyle}>{declineText}</EText>
                                         </View>
                                     )
                                 }

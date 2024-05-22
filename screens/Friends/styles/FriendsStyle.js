@@ -46,6 +46,7 @@ export default StyleSheet.create({
         alignItems:'center',
         paddingHorizontal: 10,
         borderRadius: 10,
+        position:'relative'
 
     },
     search: {
@@ -58,5 +59,10 @@ export default StyleSheet.create({
         alignItems:"center",
         marginTop: 10,
         paddingBottom: 10
+    },
+    close: {
+        position:'absolute',
+        top:15,
+        right: 10
     }
 });

@@ -31,7 +31,7 @@ export default function FriendsList({friends}) {
                         </>
                     )
                 }
-                data={[]}
+                data={friends}
                 contentContainerStyle={{paddingHorizontal: 20, flex: 1}}
                 renderItem={({item, index})=> {
                     return (
