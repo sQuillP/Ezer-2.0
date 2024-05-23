@@ -6,7 +6,6 @@ import Profile from "../screens/Profile/Profile";
 import { Pressable } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import { View } from "react-native";
-import { FontAwesome6 } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 
@@ -30,13 +29,13 @@ export default function TabNavigation() {
                         }
                 }}
             >
-                <Tab.Screen 
-                    name='Home' 
-                    component={Home}
-                />
                 <Tab.Screen
                     name="Friends"
                     component={Friends}
+                />
+                <Tab.Screen 
+                    name='Home' 
+                    component={Home}
                 />
                 <Tab.Screen
                     name="Profile"
@@ -44,7 +43,7 @@ export default function TabNavigation() {
                     options={{
                         headerRight: (props)=> {
                             return (
-                                <Pressable onPress={()=> null}>
+                                <Pressable onPress={()=> navigation.navigate('AddFriend')}>
                                     <View style={{marginRight: '20%'}}>
                                         <AntDesign name="adduser" size={40} color={palette.light} />
                                     </View>

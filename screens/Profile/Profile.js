@@ -1,7 +1,7 @@
 import SafeAreaView from "../../global-components/SafeAreaView/SafeAreaView";
 import styles from './styles/Profile'
 import EText from "../../global-components/EText/EText";
-import { Alert, Image, Pressable, View } from "react-native";
+import { Alert, Image, Pressable, StatusBar, View } from "react-native";
 import palette from "../../global-components/palette";
 
 
@@ -28,6 +28,7 @@ export default function Profile() {
 
     return (
         <SafeAreaView style={{backgroundColor: palette.blue}}>
+            <StatusBar barStyle={'light-content'}/>
             <View style={[styles.main]}>
                 <View style={styles.profileWrapper}>
                     <Image

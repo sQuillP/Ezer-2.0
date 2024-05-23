@@ -177,14 +177,14 @@ export default function EditProfileDetails() {
                     style={[styles.saveBtn, {opacity:(modifiedProfile === false || updateMePending) ? 0.5: 1}]}
                     disabled={modifiedProfile === false || updateMePending}
                 >
-                    <Text
+                    <EText
                         style={[{
                             color:'white',
                             fontWeight:'bold',
                             textAlign:'center',
                             
                         }, styles.baseFont]}
-                    >Save Changes</Text>
+                    >Save Changes</EText>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={onDiscardFormChanges}
@@ -192,13 +192,13 @@ export default function EditProfileDetails() {
                     disabled={modifiedProfile === false || updateMePending}
                 
                 >
-                    <Text
+                    <EText
                         style={[{
                             color:'white',
                             fontWeight:'bold',
                             textAlign:'center',
                         }, styles.baseFont]}
-                    >Discard changes</Text>
+                    >Discard changes</EText>
                 </TouchableOpacity>
             </View>
         </View>

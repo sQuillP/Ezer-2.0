@@ -9,7 +9,6 @@ import ListEmptyComponent from "./ListEmptyComponent";
 
 export default function InviteList({sentInvites, receivedInvites, onShowConfirmModal}) {
 
-    console.log(sentInvites, receivedInvites)
 
     const [refreshing, setRefreshing] = useState(false);
 

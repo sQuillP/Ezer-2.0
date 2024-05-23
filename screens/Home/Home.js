@@ -3,7 +3,7 @@ import EText from "../../global-components/EText/EText";
 import SafeAreaView from "../../global-components/SafeAreaView/SafeAreaView";
 import palette from "../../global-components/palette";
 import styles from './styles/HomeStyle'
-import { View, Image, Pressable } from "react-native";
+import { View, Image, Pressable, StatusBar } from "react-native";
 import CustomModal from "../../global-components/CustomModal/CustomModal";
 
 
@@ -13,6 +13,7 @@ export default function Home() {
 
     return (
         <SafeAreaView style={{backgroundColor: palette.blue}}>
+            <StatusBar barStyle={'light-content'}/>
             <View style={styles.main}>
                 <CustomModal
                     modalProps={{

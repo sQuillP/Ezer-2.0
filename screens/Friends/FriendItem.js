@@ -10,7 +10,7 @@ export default function FriendItem({friend, last=false}) {
     const navigation = useNavigation();
 
     return (
-        <Pressable onPress={()=> null}>
+        <Pressable onPress={()=> navigation.navigate("ViewProfile",{user:friend})}>
         {
             ({pressed})=> {
                 return (

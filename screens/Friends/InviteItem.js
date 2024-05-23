@@ -2,15 +2,16 @@ import { View, Pressable, Image, } from "react-native";
 import styles from './styles/FriendItemStyle';
 import EText from "../../global-components/EText/EText";
 import palette from "../../global-components/palette";
+import { useNavigation } from "@react-navigation/native";
 
 
 
 export default function InviteItem({invite, onShowConfirmModal, sent, last=false,}) {
 
+    const navigation = useNavigation();
 
-    console.log(invite)
     return (
-        <Pressable onPress={()=> null}>
+        <Pressable onPress={()=> navigation.navigate("ViewProfile", {user:invite})}>
         {
             ({pressed})=> {
                 return (
