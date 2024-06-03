@@ -9,7 +9,7 @@ export default StyleSheet.create({
     image: {
         width:'80%',
         height: 200,
-        resizeMode: 'cover',
+        resizeMode: 'contain',
         alignSelf:'center'
     },
     input:{
@@ -50,6 +50,11 @@ export default StyleSheet.create({
     },
     formItem: {
         
+    },
+    errorText: {
+        color: palette.error,
+        textAlign:'center',
+        marginTop: 5
     }
 
 });

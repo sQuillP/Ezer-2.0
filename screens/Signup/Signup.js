@@ -12,7 +12,7 @@ import palette from "../../global-components/palette";
 import { useNavigation } from "@react-navigation/native";
 import EText from "../../global-components/EText/EText";
 
-DEFAULT_FORM = {
+const DEFAULT_FORM = {
     username:'',
     firstName:'',
     lastName:'',

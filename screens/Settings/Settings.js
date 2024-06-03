@@ -10,10 +10,12 @@ import Accordian from './Accordian';
 import EditProfileDetails from './EditProfileDetails';
 import ReportBugDetails from './ReportBugDetails';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
-
-
+import { useDispatch } from 'react-redux';
+import { signOut } from '../../redux/slice/authSlice';
 
 export default function Settings() {
+
+    const dispatch = useDispatch();
 
     function onLogout() {
 
