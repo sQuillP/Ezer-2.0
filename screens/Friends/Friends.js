@@ -12,19 +12,29 @@ import { AntDesign } from '@expo/vector-icons';
 import CustomModal from "../../global-components/CustomModal/CustomModal";
 
 import { DUMMY_FRIENDS, DUMMY_INVITES } from "./dummyData";
+import { useSelector } from "react-redux";
 
 
 
 export default function Friends() {
 
+
+    /* Base state that holds retrieved values from API. */
+    const {friends, sent_invites, received_invites } = useSelector(store => store.friends.relations);
+    const invites = {
+        sent_invites,
+        received_invites
+    };
+    // const invites = DUMMY_INVITES;
+
+
     const [renderMode, setRenderMode] = useState('friends');
     const [searchTerm, setSearchTerm] = useState('');
 
-    const [friends, setFriends] = useState(DUMMY_FRIENDS);
-    const [invites, setInvites] = useState(DUMMY_INVITES);
 
-    const [renderedFriends, setRenderedFriends] = useState(DUMMY_FRIENDS);
-    const [renderedInvites, setRenderedInvites] = useState(DUMMY_INVITES);
+    /* You show THIS state to the user when they are searching something. */
+    const [renderedFriends, setRenderedFriends] = useState(friends);
+    const [renderedInvites, setRenderedInvites] = useState(invites);
 
     //code for modal
     const [openModal, setOpenModal] = useState(false);
@@ -44,7 +54,7 @@ export default function Friends() {
      * invites list.
      * @returns filtered list.
      */
-    const filterCallback = (term)=> {
+    const matchSearchTerm = (term)=> {
         return (friend)=> {
             return friend.lastName.toLowerCase().includes(term)|| 
             friend.firstName.toLowerCase().includes(term) || 
@@ -53,7 +63,7 @@ export default function Friends() {
     }
 
     /**
-     * @description all filtered invites are of type user!
+     * @description There are two cases: friends, or invites. When it is friends, 
      */
     function handleSearch(term) {
         const updateTerm = term;
@@ -64,18 +74,18 @@ export default function Friends() {
                 setRenderedFriends(friends);
                 return;
             }
-            const filteredFriends = friends.filter(filterCallback(term));
+            const filteredFriends = friends.filter(matchSearchTerm(term));
             setRenderedFriends(filteredFriends);
         } else {
             if(term.trim() === '') {
                 setRenderedInvites(invites);
             }
-            const filteredSentInvites = invites.sentInvites.filter(filterCallback(term));
-            const filteredReceivedInvites = invites.receivedInvites.filter(filterCallback(term));
+            const filteredSentInvites = invites.sent_invites.filter(matchSearchTerm(term));
+            const filteredReceivedInvites = invites.received_invites.filter(matchSearchTerm(term));
 
             setRenderedInvites({
-                sentInvites: filteredSentInvites, 
-                receivedInvites: filteredReceivedInvites
+                sent_invites: filteredSentInvites, 
+                received_invites: filteredReceivedInvites
             });
         }
         setSearchTerm(updateTerm);
@@ -123,7 +133,7 @@ export default function Friends() {
                             <View style={styles.switchContainer}>
                                 <Pressable onPress={()=> handleSwitch('friends')}>
                                     <View style={[styles.toggleButton, styles.lButton, {backgroundColor: renderMode === 'friends'?palette.green:palette.darkgreen}]}>
-                                        <EText style={styles.btnText}>My Friends (23)</EText>
+                                        <EText style={styles.btnText}>My Friends ({friends.length})</EText>
                                     </View>
                                 </Pressable>
                                 <Pressable onPress={()=> handleSwitch('invites')}>
@@ -162,8 +172,8 @@ export default function Friends() {
                             ):(
                                 <InviteList 
                                     onShowConfirmModal={onShowConfirmModal}
-                                    sentInvites={renderedInvites.sentInvites}
-                                    receivedInvites={renderedInvites.receivedInvites}
+                                    sentInvites={renderedInvites.sent_invites}
+                                    receivedInvites={renderedInvites.received_invites}
                                 />
                             )
                         }

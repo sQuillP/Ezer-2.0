@@ -25,9 +25,7 @@ export default function RootNavigation() {
     useEffect(()=> {
         ( async ()=> {
             try {
-                console.log('should automatically login');
                 const token = await AsyncStorage.getItem('TOKEN');
-                console.log('FETCHED TOKEN::: ', token);
                 if(token === null) {return;}
                 dispatch(getMe());
                 dispatch(setToken(token));
@@ -38,11 +36,9 @@ export default function RootNavigation() {
     },[]);
 
     function isLoggedIn() {
-        console.log("LOGGED IN::: ", token, user);
         return token !== null && user !== null;
     }
 
-    console.log(isLoggedIn());
 
     return (
         <Stack.Navigator

@@ -27,7 +27,7 @@ export const DUMMY_FRIENDS = [
 
 
 export const DUMMY_INVITES = {
-    sentInvites:[
+    sent_invites:[
         {
             firstName:'William',
             lastName:'Pattison',
@@ -53,7 +53,7 @@ export const DUMMY_INVITES = {
             dateJoined:new Date().getTime()+3
         }
     ],
-    receivedInvites: [
+    received_invites: [
         {
             firstName:'William',
             lastName:'Pattison',

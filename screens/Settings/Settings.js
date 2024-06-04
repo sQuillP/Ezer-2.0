@@ -38,7 +38,7 @@ export default function Settings() {
                 >
                     <ReportBugDetails/>
                 </Accordian>
-                <TouchableOpacity onPress={onLogout} style={[styles.logoutBtn]}>
+                <TouchableOpacity onPress={()=> dispatch(signOut())} style={[styles.logoutBtn]}>
                     <MaterialIcons name="logout" style={{marginRight: 5}} size={24} color="white" />
                     <EText style={[styles.buttonText, ]}>Log Out</EText>
                 </TouchableOpacity>

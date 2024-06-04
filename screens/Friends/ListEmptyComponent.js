@@ -11,9 +11,9 @@ export default function ListEmptyComponent({title}) {
     const navigation = useNavigation();
 
     return (
-        <View style={styles.main}>
+        <View style={[styles.main]}>
                 <EText style={styles.title}>{title}</EText>
-                <Pressable onPress={()=> null}>
+                <Pressable onPress={()=> navigation.navigate("AddFriend")}>
                 {
                     ({pressed})=> {
                         return (

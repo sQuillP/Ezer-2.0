@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
  */
 export const login = createAsyncThunk(
     "auth/login", 
-    async ({username, password},{rejectWithValue, getState})=> {
+    async ({username, password},{rejectWithValue, getState, dispatch})=> {
         try {
             const response = await Ezer.post("/auth",
                 {username, password},
@@ -25,7 +25,6 @@ export const login = createAsyncThunk(
             // Now grab the user
             const userResponse = await Ezer.post('/auth',{},{params:{authType:"getme"}});
             const user = userResponse.data.data
-
             return {token, user};
 
         } catch(error) {

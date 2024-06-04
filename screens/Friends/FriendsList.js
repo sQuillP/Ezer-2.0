@@ -6,10 +6,15 @@ import { RefreshControl } from "react-native-gesture-handler";
 import EText from "../../global-components/EText/EText";
 import styles from './styles/InviteList'
 import ListEmptyComponent from "./ListEmptyComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { getRelations } from "../../redux/thunk/friendsThunk";
 
 export default function FriendsList({friends}) {
 
     const [refreshing, setRefreshing] = useState(false);
+    const dispatch = useDispatch();
+
+    const {loadingRelations} = useSelector(store => store.friends);
 
 
     function update() {
@@ -47,7 +52,7 @@ export default function FriendsList({friends}) {
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
-                        onRefresh={update}
+                        onRefresh={()=> dispatch(getRelations())}
                         tintColor={palette.light}
                     />
                 }
