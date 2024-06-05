@@ -3,13 +3,17 @@
  */
 
 export function setSentDisplayNotification(state, action){
-    console.log("setsentDisplayNotification", action)
-    state.displaySentNotification = action.payload
+    console.log("sentdisplaynotification", action);
+    state.displaySentNotification = action.payload;
+    console.log("finished sentdisplaynotification");
 }
 
 
+export function syncFriends(state, action) {
+    state.relations = action.payload;
+}
+
 export function handleFulfilled(state, {payload}){
-    console.log("FULFILLED GET RELATIONS::: ", payload);
     state.loadingRelations = false;
     state.relations = payload;
     state.relationsError = false;

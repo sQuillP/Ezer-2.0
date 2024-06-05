@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Ezer } from "../../http/Ezer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { getRelations } from "./friendsThunk";
 
 
 /**
@@ -24,7 +24,9 @@ export const login = createAsyncThunk(
             await AsyncStorage.setItem("TOKEN", token);
             // Now grab the user
             const userResponse = await Ezer.post('/auth',{},{params:{authType:"getme"}});
-            const user = userResponse.data.data
+            const user = userResponse.data.data;
+            //Load the relations data while we're at it.
+            await dispatch(getRelations());
             return {token, user};
 
         } catch(error) {

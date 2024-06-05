@@ -3,9 +3,14 @@ import styles from './styles/Profile'
 import EText from "../../global-components/EText/EText";
 import { Alert, Image, Pressable, StatusBar, View } from "react-native";
 import palette from "../../global-components/palette";
-
+import { useSelector, useDispatch } from "react-redux";
+import { Ezer } from "../../http/Ezer";
+import { setUser } from "../../redux/slice/authSlice";
 
 export default function Profile() {
+
+    const { user } = useSelector(store => store.auth);
+    const dispatch = useDispatch();
 
     function openConfirmMenu() {
         Alert.alert("Reset your sobriety counter?","This action cannot be undone",[
@@ -22,8 +27,28 @@ export default function Profile() {
         ])
     }
 
+
+    function countSoberDays() {
+        const sobrietyDate = new Date(Number(user.sobrietyDate));
+        const difference = Math.floor((Date.now() - sobrietyDate)/(1000*86400));
+        return difference;
+    }
+
+
     async function onResetSobrietyCounter() {
         console.log('resetting the sobriety counter');
+        try {
+            const updateBody = {...user,sobrietyDate: Date.now().toString()}
+            const updateResponse = await Ezer.post('/auth', updateBody,{params:{authType:'updateuser'}});
+            const updatedUser = updateResponse.data.data;
+            dispatch(setUser(updatedUser));
+        } catch(error) {
+            console.log(error, error.message);
+            Alert.alert("Unable to reset counter", "Please check your connection",[{
+                text:"Ok",
+                onPress:()=> null
+            }]);
+        }
     }
 
     return (
@@ -36,13 +61,13 @@ export default function Profile() {
                         style={styles.image}
                     />
                     <View style={{marginVertical: 15}}>
-                        <EText style={styles.username}>@William_pattison</EText>
-                        <EText style={styles.fullname}>William Pattissson</EText>
+                        <EText style={styles.username}>@{user.username}</EText>
+                        <EText style={styles.fullname}>{user.firstName + " " + user.lastName}</EText>
                     </View>
                 </View>
                 <View style={styles.buttons}>
                     <View style={styles.sobrietyCounter}>
-                        <EText style={styles.sobersince}>20</EText>
+                        <EText style={styles.sobersince}>{countSoberDays()}</EText>
                     </View>
                     <Pressable onPress={openConfirmMenu}>
                         {

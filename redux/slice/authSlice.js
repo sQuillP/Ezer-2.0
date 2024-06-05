@@ -29,6 +29,9 @@ const authSlice = createSlice({
         setPushToken: (state, {payload})=> {
             state.pushToken = payload;
         },
+        setUser: (state, {payload})=> {
+            state.user = payload;
+        }
     },
     extraReducers: (builder)=> {
 
@@ -72,6 +75,6 @@ const authSlice = createSlice({
 });
 
 
-export const { signOut, setPushToken, setToken } = authSlice.actions;
+export const { signOut, setPushToken, setToken, setUser } = authSlice.actions;
 
 export default authSlice.reducer;

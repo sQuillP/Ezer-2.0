@@ -12,6 +12,7 @@ import {useDispatch} from 'react-redux';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getMe } from "../redux/thunk/authThunk";
 import { setToken } from "../redux/slice/authSlice";
+import { getRelations } from "../redux/thunk/friendsThunk";
 const Stack = createStackNavigator();
 
 
@@ -29,11 +30,13 @@ export default function RootNavigation() {
                 if(token === null) {return;}
                 dispatch(getMe());
                 dispatch(setToken(token));
+                dispatch(getRelations());
             } catch(error) {
                 // error fetching token
             }
         })();
     },[]);
+
 
     function isLoggedIn() {
         return token !== null && user !== null;
@@ -74,7 +77,6 @@ export default function RootNavigation() {
                         name="Settings"
                         component={Settings}
                         options={{
-                            // headerShown:false
                             headerBackTitle:"Back"
                         }}
                     /> 

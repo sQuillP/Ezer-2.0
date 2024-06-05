@@ -3,12 +3,12 @@ import styles from './styles/CustomModalStyle';
 import EText from "../EText/EText";
 import palette from "../palette";
 
-export default function CustomModal({modalProps,title, confirmText, declineText}) {
+export default function CustomModal({modalProps,title, confirmText, declineText, acceptAction,}) {
 
 
     function onConfirmPress() {
         console.log('some business logic');
-        modalProps.onRequestClose();
+        acceptAction();
     }
 
     return (

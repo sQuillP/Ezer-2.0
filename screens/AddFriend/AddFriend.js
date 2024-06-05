@@ -9,14 +9,14 @@ import palette from "../../global-components/palette";
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 
-import { friendAction } from "../../redux/thunk/friendsThunk";
+import { friendAction } from "../../redux/slice/friendsSlice";
 import { Ezer } from "../../http/Ezer";
 import { setSentDisplayNotification } from "../../redux/slice/friendsSlice";
 
 export default function AddFriend({navigation}) {
 
     const [username, setUsername] = useState('');
-    const [errorUsername, setErrorUsername] = useState('');
+    const [messageUsername, setMessageUsername] = useState('');
     const [error, setError] = useState(false);
     const [sentRequest, setSentRequest] = useState(false);
     const [notFound, setNotFound] = useState(false);
@@ -31,27 +31,29 @@ export default function AddFriend({navigation}) {
         setNotFound(false);
         setError(false);
         setUsername('');
-        setErrorUsername('');
+        dispatch(setSentDisplayNotification(false));
+        setMessageUsername('');
     }
     
 
     async function onAddUser() {
         try {
             setLoadingUserExists(true);
+            setMessageUsername(username)
             const existsResponse = await Ezer.get('/friends',{params:{search:username}});
             const exists = existsResponse.data.data;
 
             if(exists === null) {
                 setNotFound(true);
                 dispatch(setSentDisplayNotification(false));
-                setErrorUsername(username);
                 setLoadingUserExists(false);
                 return;
             }
+            setNotFound(false);
             dispatch(friendAction({action:'create', username}));
             setLoadingUserExists(false);
         } catch(error) {
-            console.log(error);
+            console.log("error in adduser", error);
             //unable to reach server at this time.
         } 
     }
@@ -61,7 +63,6 @@ export default function AddFriend({navigation}) {
     useEffect(()=> {
         const unsubscribe = navigation.addListener('focus', ()=> {
             console.log('resetting screen');
-            dispatch(setSentDisplayNotification(false));
             onReset();
         });
         return unsubscribe
@@ -77,10 +78,10 @@ export default function AddFriend({navigation}) {
                             <EText style={styles.header}>You can add friends with their username</EText>
                             <View style={{marginTop: '20%'}}>
                                 {
-                                    notFound && (<EText style={{color: palette.error, marginBottom: 10}}>Unable to find "{errorUsername}"</EText>)
+                                    notFound && (<EText style={{color: palette.error, marginBottom: 10}}>Unable to find "{messageUsername}"</EText>)
                                 }
                                 {
-                                    displaySentNotification && <EText style={{color: palette.green, marginBottom: 10}}>Success! You have sent friend request to "{errorUsername}"</EText>
+                                    displaySentNotification && <EText style={{color: palette.green, marginBottom: 10}}>Success! You have sent friend request to "{messageUsername}"</EText>
                                 }
                                 <View style={styles.inputcontainer}>
                                     <FontAwesome5 style={{paddingRight: 5}} name="user-friends" size={24} color="black" />
@@ -92,7 +93,7 @@ export default function AddFriend({navigation}) {
                                     />
                                     {
                                         username.trim().length > 0 && (
-                                        <Pressable onPress={()=> setUsername('')} style={{marginRight: 5}}>
+                                        <Pressable onPress={()=> onReset()} style={{marginRight: 5}}>
                                             <Ionicons name="close" size={30} color={'black'}/>
                                         </Pressable>
                                         )

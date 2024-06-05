@@ -18,7 +18,9 @@ export default function InviteList({sentInvites, receivedInvites, onShowConfirmM
     const {loadingRelations} = useSelector(store => store.friends);
     const dispatch = useDispatch();
 
-    function update() {
+    console.log("LOADING RELATIONS", loadingRelations);
+
+    function showRefresh() {
         setRefreshing(true)
         setTimeout(()=> {
             setRefreshing(false);
@@ -46,7 +48,7 @@ export default function InviteList({sentInvites, receivedInvites, onShowConfirmM
     return (
         <SectionList
             sections={getInviteData()}
-            keyExtractor={item => item.dateJoined}
+            keyExtractor={item => item.username}
             renderSectionHeader={({section:{title}})=> {
                 return (
                     <View style={styles.header}>
@@ -56,8 +58,8 @@ export default function InviteList({sentInvites, receivedInvites, onShowConfirmM
             }}
             refreshControl={
                 <RefreshControl
-                    refreshing={loadingRelations}
-                    onRefresh={()=>dispatch(getRelations())}
+                    refreshing={refreshing}
+                    onRefresh={()=>{ showRefresh(); dispatch(getRelations())}}
                     tintColor={palette.light}
                 />
             }
@@ -68,7 +70,7 @@ export default function InviteList({sentInvites, receivedInvites, onShowConfirmM
             renderItem={({item, section, index})=> {
                 return (
                     <InviteItem
-                        sent={false}
+                        sent={section.title === 'Sent Invites'}
                         last={index === section.data.length-1}
                         invite={item}
                         onShowConfirmModal={onShowConfirmModal}

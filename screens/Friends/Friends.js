@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EText from "../../global-components/EText/EText";
 import SafeAreaView from "../../global-components/SafeAreaView/SafeAreaView";
 import palette from "../../global-components/palette";
@@ -21,23 +21,32 @@ export default function Friends() {
 
     /* Base state that holds retrieved values from API. */
     const {friends, sent_invites, received_invites } = useSelector(store => store.friends.relations);
-    const invites = {
-        sent_invites,
-        received_invites
-    };
+
+
+    console.log(sent_invites, received_invites)
+
     // const invites = DUMMY_INVITES;
 
 
     const [renderMode, setRenderMode] = useState('friends');
     const [searchTerm, setSearchTerm] = useState('');
 
-
     /* You show THIS state to the user when they are searching something. */
     const [renderedFriends, setRenderedFriends] = useState(friends);
-    const [renderedInvites, setRenderedInvites] = useState(invites);
+    const [renderedInvites, setRenderedInvites] = useState({sent_invites, received_invites});
 
     //code for modal
     const [openModal, setOpenModal] = useState(false);
+
+
+    /**
+     * @description Refresh & update when going through relations
+     */
+    useEffect(()=> {
+        const updateObject = {sent_invites, received_invites};
+        setRenderedInvites({...updateObject});
+        setRenderedFriends([...friends])
+    },[sent_invites, received_invites]);
 
     /**
      * @description reset the form and the search term.
@@ -94,7 +103,7 @@ export default function Friends() {
     function handleClear() {
         setSearchTerm('');
         setRenderedFriends(friends);
-        setRenderedInvites(invites)
+        setRenderedInvites({sent_invites, received_invites})
     }
 
     async function rejectInvite() {
@@ -138,7 +147,7 @@ export default function Friends() {
                                 </Pressable>
                                 <Pressable onPress={()=> handleSwitch('invites')}>
                                     <View style={[styles.toggleButton, styles.rButton, {backgroundColor: renderMode === 'invites'?palette.green:palette.darkgreen}]}>
-                                        <EText style={styles.btnText}>Invites (0)</EText>
+                                        <EText style={styles.btnText}>Invites ({sent_invites.length + received_invites.length})</EText>
                                     </View>
                                 </Pressable>
                             </View>

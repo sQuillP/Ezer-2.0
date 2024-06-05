@@ -17,7 +17,7 @@ export default function FriendsList({friends}) {
     const {loadingRelations} = useSelector(store => store.friends);
 
 
-    function update() {
+    function showRefresh() {
         setRefreshing(true);
         setTimeout(()=> {
             setRefreshing(false);
@@ -52,11 +52,11 @@ export default function FriendsList({friends}) {
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
-                        onRefresh={()=> dispatch(getRelations())}
+                        onRefresh={()=>{ showRefresh(); dispatch(getRelations())}}
                         tintColor={palette.light}
                     />
                 }
-                keyExtractor={(item)=> item.dateJoined}
+                keyExtractor={(item)=> item.username}
             />
         </View>
     )
