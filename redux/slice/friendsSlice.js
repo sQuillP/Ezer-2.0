@@ -87,7 +87,7 @@ export const friendAction = createAsyncThunk(
         } catch(error) {
             console.log("Error in friend action")
             console.log(error, error.message);
-            return rejectWithValue(error.response.status);
+            return rejectWithValue(error.response.data.data);
         }
     }
 )

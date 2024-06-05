@@ -9,53 +9,98 @@ import palette from "../../global-components/palette";
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 
-import { friendAction } from "../../redux/slice/friendsSlice";
 import { Ezer } from "../../http/Ezer";
-import { setSentDisplayNotification } from "../../redux/slice/friendsSlice";
+import { syncRelations } from "../../redux/slice/friendsSlice";
 
 export default function AddFriend({navigation}) {
 
+    // Main component state.
     const [username, setUsername] = useState('');
-    const [messageUsername, setMessageUsername] = useState('');
-    const [error, setError] = useState(false);
-    const [sentRequest, setSentRequest] = useState(false);
-    const [notFound, setNotFound] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+    const [loadingRequest, setLoadingRequest] = useState(false);
 
+    //Redux state
+    const {user} = useSelector(store => store.auth);
+    const { relations } = useSelector(store => store.friends);
     const dispatch = useDispatch();
-    const {loadingRelations, relationsError, displaySentNotification } = useSelector(store => store.friends);
-    const [loadingUserExists, setLoadingUserExists] = useState(false);
-     
+
 
     function onReset() {
-        setSentRequest(false);
-        setNotFound(false);
-        setError(false);
+        setErrorMessage("");
+        setSuccessMessage("");
+        setLoadingRequest(false);
         setUsername('');
-        dispatch(setSentDisplayNotification(false));
-        setMessageUsername('');
     }
     
 
+    /**
+     * @edescription check if search term is already in one of the invites, or friends lists.
+     * @returns {boolean} true if user is already added to one of their relations.
+     */
+    function checkIfAddedAlready() {
+        for(const key of Object.keys(relations)) {
+            if(relations[key].find(user => user.username === username) !== undefined) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // clear success message and show the error message.
+    function error(_error) {
+        setSuccessMessage("");
+        setErrorMessage(_error)
+    }
+
+    //clear error message and show the success message.
+    function success(_success) {
+        setErrorMessage('');
+        setSuccessMessage(_success);
+    }
+
+
+    /**
+     * @description Run through the following checks:
+     * 1. Check if user is already addeed in one of the relations
+     * 2. Make sure that user is not adding themself.
+     * 3. Make sure that user exists.
+     * 4. Send friend request to the user, then sync updated relations.
+     * @returns {Promise<undefined>}
+     */
     async function onAddUser() {
         try {
-            setLoadingUserExists(true);
-            setMessageUsername(username)
-            const existsResponse = await Ezer.get('/friends',{params:{search:username}});
-            const exists = existsResponse.data.data;
-
-            if(exists === null) {
-                setNotFound(true);
-                dispatch(setSentDisplayNotification(false));
-                setLoadingUserExists(false);
-                return;
+            const cpyUsername = username
+            if(checkIfAddedAlready() === true) {
+                error(`User "${cpyUsername}" is already added to your relations`);
+            } else if(user.username === username) {
+                error("You cannot add yourself!")
+            } else {
+                setLoadingRequest(true);
+                const existResponse = await Ezer.get('/friends', {params:{search:username}});
+                const exists = existResponse.data.data;
+                if(exists === null) {
+                    error(`User "${cpyUsername}" does not exist`);
+                    setLoadingRequest(false);
+                    return;
+                }
+                const addUserResponse = await Ezer.post('/friends',
+                    {username:username},
+                    {params:{action:'create'}}
+                );
+                const updatedRelations = addUserResponse.data.data;
+                dispatch(syncRelations(updatedRelations));
+                success(`Success! Invite has been sent to "${cpyUsername}`)
             }
-            setNotFound(false);
-            dispatch(friendAction({action:'create', username}));
-            setLoadingUserExists(false);
         } catch(error) {
-            console.log("error in adduser", error);
-            //unable to reach server at this time.
-        } 
+            if(typeof error?.response?.data?.data === 'string'){
+                error(error.response.data.data);
+            } else {
+                error("Unable to add friend at this time. This might be due to an unresolved bug.");
+            }
+        } finally {
+            setLoadingRequest(false);
+        }
     }
 
 
@@ -78,10 +123,10 @@ export default function AddFriend({navigation}) {
                             <EText style={styles.header}>You can add friends with their username</EText>
                             <View style={{marginTop: '20%'}}>
                                 {
-                                    notFound && (<EText style={{color: palette.error, marginBottom: 10}}>Unable to find "{messageUsername}"</EText>)
+                                    errorMessage && (<EText style={{color: palette.error, marginBottom: 10}}>{errorMessage}</EText>)
                                 }
                                 {
-                                    displaySentNotification && <EText style={{color: palette.green, marginBottom: 10}}>Success! You have sent friend request to "{messageUsername}"</EText>
+                                    successMessage && <EText style={{color: palette.green, marginBottom: 10}}>{successMessage}</EText>
                                 }
                                 <View style={styles.inputcontainer}>
                                     <FontAwesome5 style={{paddingRight: 5}} name="user-friends" size={24} color="black" />
@@ -103,12 +148,12 @@ export default function AddFriend({navigation}) {
                         </View>
                         <Pressable 
                             onPress={onAddUser}
-                            disabled={username.trim() === ''}
+                            disabled={username.trim() === '' || loadingRequest}
                         >
                             {
                                 ({pressed})=> {
                                     return (
-                                        <View style={[styles.button,{opacity: (pressed||username.trim() === '' || loadingRelations || loadingUserExists) ? 0.5:1, backgroundColor: palette.green}]}>
+                                        <View style={[styles.button,{opacity: (pressed||username.trim() === '' || loadingRequest) ? 0.5:1, backgroundColor: palette.green}]}>
                                             <EText style={styles.btnText}>Add Friend +</EText>
                                         </View>
                                     )

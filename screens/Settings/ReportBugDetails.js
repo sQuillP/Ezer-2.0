@@ -10,7 +10,9 @@ import {
 
 import styles from './styles/ReportBugDetails';
 
-
+import EText from '../../global-components/EText/EText';
+import { Ezer } from '../../http/Ezer';
+import CustomModal from '../../global-components/CustomModal/CustomModal';
 
 
 export default function ReportBugDetails() {
@@ -19,8 +21,19 @@ export default function ReportBugDetails() {
     const [validReport, setValidReport] = useState(false);
     const [sendingBugReport, setSendingBugReport] = useState(false);
 
+
+
     async function handleSubmitBugDetails(){
-        
+        try {
+            setSendingBugReport(true);
+            const reportResponse = await Ezer.post("/bug-report", {created: new Date().getTime().toString(), report: bugDetails});
+            Alert.alert("Bug report received", "Thank you for your feedback",[{text:"No problem", onPress: ()=>null}]);
+            setBugDetails('');
+        } catch(error) {
+            console.log('error');
+        } finally {
+            setSendingBugReport(false);
+        }
     }
 
 
@@ -36,11 +49,11 @@ export default function ReportBugDetails() {
 
     return (
         <View style={styles.main}>
-            <Text style={[styles.baseFont,{marginVertical: 10, fontSize: 16}]}>
+            <EText style={[styles.baseFont,{marginVertical: 10, fontSize: 16}]}>
                 Please note that this application is currently in 
-                <Text style={{fontFamily:'Nunito-Bold'}}> soft release.</Text> 
-                You may experience technical problems along the way.
-            </Text>
+                <EText style={{fontFamily:'Nunito-Bold'}}> soft release.</EText> 
+                &nbsp; You may experience technical problems along the way.
+            </EText>
             <TextInput
                 onChangeText={handleChangeText}
                 value={bugDetails}
@@ -54,7 +67,7 @@ export default function ReportBugDetails() {
                 onPress={handleSubmitBugDetails}
                 disabled={validReport === false}
             >
-                <Text style={[styles.baseFont, styles.btnText]}>Submit Bug Report</Text>
+                <EText style={[styles.baseFont, styles.btnText]}>Submit Bug Report</EText>
             </TouchableOpacity>
         </View>
     )

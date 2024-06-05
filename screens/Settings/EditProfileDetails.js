@@ -11,12 +11,14 @@ import {
 import { Feather } from '@expo/vector-icons';
 
 import styles from './styles/EditProfileDetails';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EText from '../../global-components/EText/EText';
 import deepEquals from 'lodash/isEqual';
 import { AntDesign } from '@expo/vector-icons';
 import palette from '../../global-components/palette';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../../redux/slice/authSlice';
+import { Ezer } from '../../http/Ezer';
 
 const initialFormValue = {
     firstName: "William",
@@ -38,15 +40,17 @@ const default_image_path = "../../assets/png/unknown_user.jpg"
 
 export default function EditProfileDetails() {
 
-    const [profileForm, setProfileForm] = useState(initialFormValue);
+    const {user} = useSelector(store => store.auth);
+    const dispatch = useDispatch();
+
+    const [profileForm, setProfileForm] = useState({firstName: user.firstName, lastName: user.lastName});
 
     const [editField, setEditField] = useState('');
-
 
     const [modifiedProfile, setModifiedProfile] = useState(false);
 
     /* original settings form to revert back to */
-    const [oldProfileForm, setOldProfileForm] = useState(initialFormValue);
+    const [oldProfileForm, setOldProfileForm] = useState({firstName:user.firstName, lastName: user.lastName});
 
     /* Current profile image that user has selected */
     const [profileImageDisplay, setProfileImageDisplay] = useState(null);
@@ -56,6 +60,11 @@ export default function EditProfileDetails() {
     const [updateMePending, setUpdateMePending] = useState(false);
 
 
+
+    /**
+     * @description Update profile details when user types in the fields to modify
+     * firstname or lastname.
+     */
     function handleProfileSettingsFormChange(value,field) {
         //apply any field validation middleware
         const updatedFormField = {
@@ -64,24 +73,56 @@ export default function EditProfileDetails() {
         };
 
         const deepEq = deepEquals(updatedFormField, oldProfileForm);
-        if(deepEq === false)
+        if(deepEq === false){
             setModifiedProfile(true);
-        else if(modifiedProfile)
+        }
+        else if(modifiedProfile){
             setModifiedProfile(false);
+        }
 
         setProfileForm(updatedFormField);
     }
 
-    function onSaveProfileChanges() {
+    async function onSaveProfileChanges() {
+        console.log('modifiedprofile', profileForm);
+        try {
+            setUpdateMePending(true);
+            const updatePayload = {...user};
+            if(profileForm.firstName.trim()) {
+                updatePayload.firstName = profileForm.firstName;
+            }
+            if(profileForm.lastName.trim()) {
+                updatePayload.lastName = profileForm.lastName;
+            }
 
+            const profileUpdateResponse = await Ezer.post('/auth',updatePayload, {params:{authType:'updateuser'}});
+            const updatedProfile = profileUpdateResponse.data.data;
+            dispatch(setUser(updatedProfile));
+        } catch(error) {
+
+        } finally {
+            setUpdateMePending(false);
+        }
     }
 
 
+    /**
+     * @description revert back to the old profile details
+     */
     function onDiscardFormChanges() {
         setModifiedProfile(false);
         setProfileForm({...oldProfileForm});
         setProfileImageData(null);
     }
+
+
+    /**
+     * @description: make sure that changes reflect from the redux store.
+     */
+    useEffect(()=> {
+        setProfileForm({firstName: user.firstName, lastName: user.lastName});
+        setOldProfileForm({firstName: user.firstName, lastName: user.lastName});
+    },[user]);
 
 
     return (

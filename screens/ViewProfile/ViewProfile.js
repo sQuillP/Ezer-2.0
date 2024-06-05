@@ -13,6 +13,12 @@ export default function ViewProfile({ route }) {
     const { top, left, bottom, right} = useSafeAreaInsets();
 
 
+    function countSoberDays() {
+        const sobrietyDate = new Date(Number(user.sobrietyDate));
+        const difference = Math.floor((Date.now() - sobrietyDate)/(1000*86400));
+        return difference;
+    }
+
     return (
         <View style={[styles.container, {paddingTop: top, paddingLeft: left, paddingRight: right}]}>
             <StatusBar barStyle={'dark-content'}/>
@@ -28,17 +34,9 @@ export default function ViewProfile({ route }) {
                         <EText style={styles.title}>@{user.username}</EText>
                         <EText>{user.firstName} {user.lastName}</EText>
                     </View>
-                    <Pressable onPress={()=> null}>
-                        {
-                            ({pressed})=> {
-                                return (
-                                    <View>
-                                        <EText>Add Friend</EText>
-                                    </View>
-                                )
-                            }
-                        }
-                    </Pressable>
+                    <View style={styles.sobrietyCounter}>
+                        <EText style={styles.sobersince}>{countSoberDays()}</EText>
+                    </View>
                 </View>
             </View>
         </View>

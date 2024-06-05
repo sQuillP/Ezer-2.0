@@ -31,5 +31,21 @@ export default StyleSheet.create({
         textAlign:'center',
         fontSize: 30,
         marginVertical:'10%',
-    }
+    },
+    sobrietyCounter: {
+        backgroundColor: palette.light,
+        padding: 15,
+        borderRadius: 20,
+        marginBottom: 35,
+        minWidth: 150,
+        alignItems:'center',
+        backgroundColor: '#e2e2e2',
+    },
+    sobersince: {
+        fontSize: 30,
+        color:'#000000',
+        textAlign:'center',
+        backgroundColor: '#e2e2e2',
+
+    },
 })
