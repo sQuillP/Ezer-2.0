@@ -28,10 +28,21 @@ export default function InviteItem({invite, onShowConfirmModal, sent, last=false
             ({pressed})=> {
                 return (
                     <View style={[styles.main, last===true ?{}:styles.last, {opacity: pressed === true ? 0.5: 1}]}>
-                        <Image 
-                            source={require('../../assets/png/unknown_user.jpg')}
-                            style={styles.image}
-                        />
+                        {
+                            invite.image ? (
+                                <Image 
+                                    source={{uri: invite.image}}
+                                    style={styles.image}
+                                    loadingIndicatorSource={require('../../assets/png/unknown_user.jpg')}
+                                />
+                            ):(
+                                <Image 
+                                    source={require('../../assets/png/unknown_user.jpg')}
+                                    style={styles.image}
+                                    loadingIndicatorSource={require('../../assets/png/unknown_user.jpg')}
+                                />
+                            )
+                        }
                         <View style={styles.contentContainer}>
                             <EText style={styles.topText}>{invite.firstName + " " + invite.lastName}</EText>
                             <EText style={styles.bottomText}>@{invite.username}</EText>

@@ -5,7 +5,7 @@ import palette from "../../../global-components/palette";
 export default StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#e2e2e2'
+        backgroundColor: '#e2e2e2',
     },
     main: {
         flex: 1
@@ -25,12 +25,19 @@ export default StyleSheet.create({
     bottom: {
         backgroundColor: palette.light,
         flex: 2,
-        zIndex: -1
+        zIndex: -1,
+        justifyContent:'flex-start',
+        alignItems:'center',
     },
     title: {
         textAlign:'center',
         fontSize: 30,
-        marginVertical:'10%',
+        marginTop:'10%',
+        marginBottom: '5%',
+    },
+    firstName: {
+        textAlign:'center',
+        fontSize: 20
     },
     sobrietyCounter: {
         backgroundColor: palette.light,
@@ -46,6 +53,9 @@ export default StyleSheet.create({
         color:'#000000',
         textAlign:'center',
         backgroundColor: '#e2e2e2',
-
     },
+    unfriend: {
+        width: '90%',
+        paddingVertical: 15
+    }
 })

@@ -15,10 +15,21 @@ export default function FriendItem({friend, last=false}) {
             ({pressed})=> {
                 return (
                     <View style={[styles.main, last===true ?{}:styles.last, {opacity: pressed === true ? 0.5: 1}]}>
-                        <Image 
-                            source={require('../../assets/png/unknown_user.jpg')}
-                            style={styles.image}
-                        />
+                        {
+                            friend.image ? (
+                                <Image 
+                                    source={{uri: friend.image}}
+                                    style={styles.image}
+                                    loadingIndicatorSource={require('../../assets/png/unknown_user.jpg')}
+                                />
+                            ):(
+                                <Image 
+                                    source={require('../../assets/png/unknown_user.jpg')}
+                                    style={styles.image}
+                                    loadingIndicatorSource={require('../../assets/png/unknown_user.jpg')}
+                                />
+                            )
+                        }
                         <View style={styles.contentContainer}>
                             <EText style={styles.topText}>{friend.firstName + " " + friend.lastName}</EText>
                             <EText style={styles.bottomText}>@{friend.username}</EText>

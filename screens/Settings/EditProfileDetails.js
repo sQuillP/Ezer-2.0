@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
+import { Camera } from 'expo-camera';
+
 import styles from './styles/EditProfileDetails';
 import { useEffect, useState } from 'react';
 import EText from '../../global-components/EText/EText';
@@ -19,6 +21,12 @@ import palette from '../../global-components/palette';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../../redux/slice/authSlice';
 import { Ezer } from '../../http/Ezer';
+import { useNavigation } from '@react-navigation/native';
+import useImagePicker from '../../global-components/ImagePicker/imagePicker';
+import { setPhoto } from '../../redux/slice/dataSlice';
+import { uploadImageToS3 } from '../../http/s3/s3';
+
+
 
 const initialFormValue = {
     firstName: "William",
@@ -41,6 +49,8 @@ const default_image_path = "../../assets/png/unknown_user.jpg"
 export default function EditProfileDetails() {
 
     const {user} = useSelector(store => store.auth);
+    const { capturedPhoto } = useSelector(store => store.data);
+
     const dispatch = useDispatch();
 
     const [profileForm, setProfileForm] = useState({firstName: user.firstName, lastName: user.lastName});
@@ -59,7 +69,7 @@ export default function EditProfileDetails() {
 
     const [updateMePending, setUpdateMePending] = useState(false);
 
-
+    const navigation = useNavigation()
 
     /**
      * @description Update profile details when user types in the fields to modify
@@ -94,16 +104,55 @@ export default function EditProfileDetails() {
             if(profileForm.lastName.trim()) {
                 updatePayload.lastName = profileForm.lastName;
             }
+            let url = user.image;
+            if(capturedPhoto !== null) {
+                console.log('uploading to s3')
+                url = await uploadImageToS3(capturedPhoto);
+            }
+
+            updatePayload.image = url;
 
             const profileUpdateResponse = await Ezer.post('/auth',updatePayload, {params:{authType:'updateuser'}});
             const updatedProfile = profileUpdateResponse.data.data;
             dispatch(setUser(updatedProfile));
+            dispatch(setPhoto(null));
+            setModifiedProfile(false);
         } catch(error) {
-
+            console.log(error,error.message);
         } finally {
             setUpdateMePending(false);
         }
     }
+
+    /**
+     * Request permission to use camera and then
+     * navigate to the camera screen.
+     */
+    async function onOpenCamera() {
+        const {status} = await Camera.requestCameraPermissionsAsync();
+        if(status !== 'granted') return;
+        navigation.navigate("Camera");
+    }
+
+    /**
+     * @description open camera roll and extract the selected image that user chooses.
+     */
+    async function onOpenCameraRoll() {
+        const selectedImage = await useImagePicker();
+        if(selectedImage === null) {
+            return;
+        }
+        dispatch(setPhoto(selectedImage));
+    }
+
+    function onShowImageOptions() {
+        Alert.alert("Update Profile Image", "Please choose from one of the following", [
+            {text:"Camera roll", onPress: onOpenCameraRoll},
+            {text:"Take Photo", onPress: onOpenCamera}
+        ]);
+    }
+
+
 
 
     /**
@@ -113,6 +162,7 @@ export default function EditProfileDetails() {
         setModifiedProfile(false);
         setProfileForm({...oldProfileForm});
         setProfileImageData(null);
+        dispatch(setPhoto(null));
     }
 
 
@@ -124,6 +174,15 @@ export default function EditProfileDetails() {
         setOldProfileForm({firstName: user.firstName, lastName: user.lastName});
     },[user]);
 
+    /**
+     * @description set modified profile to true when you captrue a new photo
+     */
+    useEffect(()=> {
+        if(capturedPhoto !== null) {
+            setModifiedProfile(true);
+        }
+    },[capturedPhoto]);
+
 
     return (
         <View style={styles.main}>
@@ -131,16 +190,25 @@ export default function EditProfileDetails() {
                 <Text style={[styles.imgHeader]}>Edit Profile Image</Text>
                 <TouchableOpacity 
                     style={{position:'relative'}}
-                    onPress={()=> null}
+                    onPress={onShowImageOptions}
                 >
-                    <Image 
-                        resizeMode='cover' 
-                        style={styles.profileImage} 
-                        source={profileImageDisplay === null?require(default_image_path):{
-                            uri: profileImageDisplay
-                        }}
-                        loadingIndicatorSource={require(default_image_path)}
-                    />
+                {
+                    capturedPhoto === null ? (
+                        <Image 
+                            resizeMode='cover' 
+                            style={styles.profileImage} 
+                            source={{uri: user.image}}
+                            loadingIndicatorSource={require(default_image_path)}
+                        />
+                    ):(
+                        <Image 
+                            resizeMode='cover' 
+                            style={styles.profileImage} 
+                            source={{uri: capturedPhoto.uri}}
+                            loadingIndicatorSource={require(default_image_path)}
+                        />
+                    )
+                }
                     <View style ={{
                         position:'absolute', 
                         justifyContent:'center',
@@ -229,7 +297,7 @@ export default function EditProfileDetails() {
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={onDiscardFormChanges}
-                    style={[{...styles.saveBtn, backgroundColor:palette.blue}, {opacity: (modifiedProfile === false || updateMePending) ? 0.5 : 1}]}
+                    style={[{...styles.saveBtn, backgroundColor:palette.blue}, {opacity: (modifiedProfile === false || updateMePending ) ? 0.5 : 1}]}
                     disabled={modifiedProfile === false || updateMePending}
                 
                 >

@@ -56,10 +56,19 @@ export default function Profile() {
             <StatusBar barStyle={'light-content'}/>
             <View style={[styles.main]}>
                 <View style={styles.profileWrapper}>
-                    <Image
-                        source={require("../../assets/png/unknown_user.jpg")}
-                        style={styles.image}
-                    />
+                {
+                    user.image ? (
+                        <Image
+                            source={{uri: user.image}}
+                            style={styles.image}
+                        />
+                    ):(
+                        <Image
+                            source={require("../../assets/png/unknown_user.jpg")}
+                            style={styles.image}
+                        />
+                    )
+                }
                     <View style={{marginVertical: 15}}>
                         <EText style={styles.username}>@{user.username}</EText>
                         <EText style={styles.fullname}>{user.firstName + " " + user.lastName}</EText>

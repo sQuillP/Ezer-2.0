@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getMe } from "../redux/thunk/authThunk";
 import { setToken } from "../redux/slice/authSlice";
 import { getRelations } from "../redux/thunk/friendsThunk";
+import Camera from '../screens/Camera/Camera';
 const Stack = createStackNavigator();
 
 
@@ -63,6 +64,13 @@ export default function RootNavigation() {
                             headerShown:false
                         }}
                     />
+                    <Stack.Screen
+                        name="Camera"
+                        component={Camera}
+                        options={{
+                            headerShown:false
+                        }}
+                    />
                 </>
             ):(
                 <>
@@ -72,6 +80,11 @@ export default function RootNavigation() {
                         options={{
                             headerShown:false
                         }}
+                    />
+                    <Stack.Screen
+                        name="Camera"
+                        component={Camera}
+                        options={{headerShown:false}}
                     />
                     <Stack.Screen
                         name="Settings"

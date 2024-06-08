@@ -81,21 +81,23 @@ export default function Friends() {
         if(renderMode === 'friends') {
             if(term.trim() === '') {
                 setRenderedFriends(friends);
-                return;
             }
-            const filteredFriends = friends.filter(matchSearchTerm(term));
-            setRenderedFriends(filteredFriends);
+            else {
+                const filteredFriends = friends.filter(matchSearchTerm(term));
+                setRenderedFriends(filteredFriends);
+            }
         } else {
             if(term.trim() === '') {
-                setRenderedInvites(invites);
-            }
-            const filteredSentInvites = invites.sent_invites.filter(matchSearchTerm(term));
-            const filteredReceivedInvites = invites.received_invites.filter(matchSearchTerm(term));
+                setRenderedInvites({sent_invites, received_invites});
+            } else {
+                const filteredSentInvites = renderedInvites.sent_invites.filter(matchSearchTerm(term));
+                const filteredReceivedInvites = renderedInvites.received_invites.filter(matchSearchTerm(term));
 
-            setRenderedInvites({
-                sent_invites: filteredSentInvites, 
-                received_invites: filteredReceivedInvites
-            });
+                setRenderedInvites({
+                    sent_invites: filteredSentInvites, 
+                    received_invites: filteredReceivedInvites
+                });
+            }
         }
         setSearchTerm(updateTerm);
     }
