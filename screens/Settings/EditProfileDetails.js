@@ -53,14 +53,14 @@ export default function EditProfileDetails() {
 
     const dispatch = useDispatch();
 
-    const [profileForm, setProfileForm] = useState({firstName: user.firstName, lastName: user.lastName});
+    const [profileForm, setProfileForm] = useState({firstName: user?.firstName, lastName: user?.lastName});
 
     const [editField, setEditField] = useState('');
 
     const [modifiedProfile, setModifiedProfile] = useState(false);
 
     /* original settings form to revert back to */
-    const [oldProfileForm, setOldProfileForm] = useState({firstName:user.firstName, lastName: user.lastName});
+    const [oldProfileForm, setOldProfileForm] = useState({firstName:user?.firstName, lastName: user?.lastName});
 
     /* Current profile image that user has selected */
     const [profileImageDisplay, setProfileImageDisplay] = useState(null);
@@ -152,8 +152,7 @@ export default function EditProfileDetails() {
         ]);
     }
 
-
-
+    console.log({modifiedProfile, updateMePending})
 
     /**
      * @description revert back to the old profile details
@@ -170,8 +169,8 @@ export default function EditProfileDetails() {
      * @description: make sure that changes reflect from the redux store.
      */
     useEffect(()=> {
-        setProfileForm({firstName: user.firstName, lastName: user.lastName});
-        setOldProfileForm({firstName: user.firstName, lastName: user.lastName});
+        setProfileForm({firstName: user?.firstName, lastName: user?.lastName});
+        setOldProfileForm({firstName: user?.firstName, lastName: user?.lastName});
     },[user]);
 
     /**
@@ -193,21 +192,35 @@ export default function EditProfileDetails() {
                     onPress={onShowImageOptions}
                 >
                 {
-                    capturedPhoto === null ? (
-                        <Image 
-                            resizeMode='cover' 
-                            style={styles.profileImage} 
-                            source={{uri: user.image}}
-                            loadingIndicatorSource={require(default_image_path)}
-                        />
-                    ):(
-                        <Image 
-                            resizeMode='cover' 
-                            style={styles.profileImage} 
-                            source={{uri: capturedPhoto.uri}}
-                            loadingIndicatorSource={require(default_image_path)}
-                        />
-                    )
+                    (()=> {
+                        if(capturedPhoto !== null) {
+                            return (
+                                <Image 
+                                    resizeMode='cover' 
+                                    style={styles.profileImage} 
+                                    source={{uri: capturedPhoto.uri}}
+                                    loadingIndicatorSource={require(default_image_path)}
+                                />
+                            )
+                        } else if(user?.image !== "") {
+                            return (
+                                <Image
+                                    resizeMode='cover' 
+                                    style={styles.profileImage} 
+                                    source={{uri: user?.image}}
+                                    loadingIndicatorSource={require(default_image_path)}
+                                />
+                            )
+                        } else {
+                            return (
+                                <Image
+                                    resizeMode='cover' 
+                                    style={styles.profileImage} 
+                                    source={require(default_image_path)}
+                                />
+                            )
+                        }
+                    })()
                 }
                     <View style ={{
                         position:'absolute', 

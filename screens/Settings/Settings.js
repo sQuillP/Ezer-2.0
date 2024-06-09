@@ -12,13 +12,15 @@ import ReportBugDetails from './ReportBugDetails';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import { useDispatch } from 'react-redux';
 import { signOut } from '../../redux/slice/authSlice';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Settings() {
 
     const dispatch = useDispatch();
 
-    function onLogout() {
-
+    async function onLogout() {
+        await AsyncStorage.removeItem("TOKEN");
+        dispatch(signOut());
     }
 
     return (
@@ -38,7 +40,7 @@ export default function Settings() {
                 >
                     <ReportBugDetails/>
                 </Accordian>
-                <TouchableOpacity onPress={()=> dispatch(signOut())} style={[styles.logoutBtn]}>
+                <TouchableOpacity onPress={onLogout} style={[styles.logoutBtn]}>
                     <MaterialIcons name="logout" style={{marginRight: 5}} size={24} color="white" />
                     <EText style={[styles.buttonText, ]}>Log Out</EText>
                 </TouchableOpacity>

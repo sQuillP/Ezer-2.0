@@ -15,6 +15,9 @@ export default StyleSheet.create({
         marginVertical: 10
     },
     header: {
+        flexDirection:'row',
+        justifyContent:'space-around',
+        alignItems:'center'
     },
     headerText: {
         textAlign:'center',
@@ -31,17 +34,30 @@ export default StyleSheet.create({
     signup: {
         flexDirection:'row',
         alignItems:'center',
-        borderRadius: 10
+        borderRadius: 10,
+        width: '90%',
+        paddingVertical: 10,
+        justifyContent:'center',
+        paddingHorizontal: 10
     },
     signupText: {
-        fontSize: 30,
+        fontSize: 25,
         color:palette.light,
-        paddingVertical: 10,
-        paddingHorizontal: 50,
     },
     account: {
         fontSize: 20,
         marginVertical: 10
+    },
+    imageContainer: {
+        alignItems:'center',
+        marginTop: 20
+    },
+    profileImage: {
+        height: 170,
+        width: 170,
+        borderRadius: 1000,
+        borderWidth: 4,
+        borderColor: "gray"
     }
 
 });

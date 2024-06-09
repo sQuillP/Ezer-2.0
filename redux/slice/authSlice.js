@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getMe, login } from "../thunk/authThunk";
-
+import { getMe, login, signup } from "../thunk/authThunk";
 const initialState = {
     token: null,
     pushToken: null,
@@ -9,6 +8,8 @@ const initialState = {
     //Login state, mostly for UI purposes.
     loginPending: false,
     invalidLoginCredentials: false,
+
+    signupPending: false,
 
 
     internalServerError: false
@@ -22,6 +23,7 @@ const authSlice = createSlice({
         signOut: (state, {payload})=> {
             state.token = null;
             state.user = null;
+            
         },
         setToken: (state, {payload})=> {
             state.token = payload;
@@ -55,6 +57,20 @@ const authSlice = createSlice({
             }
         });
 
+        builder.addCase(signup.fulfilled, (state, {payload})=> {
+            console.log("INCOMING PAYLOAD:::", payload);
+            state.user = payload.newUser;
+            state.token = payload.token;
+            state.signupPending = false;
+        });
+
+        builder.addCase(signup.pending, (state, {payload})=> {
+            state.signupPending = true;
+        });
+
+        builder.addCase(signup.rejected, (state, {payload})=> {
+            state.signupPending = false;
+        })
 
         builder.addCase(getMe.fulfilled, (state, {payload})=> {
             state.user = payload;
