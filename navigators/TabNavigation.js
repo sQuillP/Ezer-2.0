@@ -8,6 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { View } from "react-native";
 import { Octicons } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
+import { HomeIcon, FriendsIcon, ProfileIcon } from "../svg/Icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -24,17 +25,25 @@ export default function TabNavigation() {
                 screenOptions={{
                     headerShown: false,
                     tabBarStyle:{
-                            backgroundColor:palette.blue,
-                            borderTopWidth:0
-                        }
+                        backgroundColor:palette.blue,
+                        borderTopWidth:0
+                    },
+                    title:''
                 }}
             >
                 <Tab.Screen
                     name="Friends"
                     component={Friends}
+                    options={{
+                        tabBarIcon: ()=> <FriendsIcon height={50} width={50}/>
+                    }}
                 />
                 <Tab.Screen 
                     name='Home' 
+                    options={{
+                        tabBarIcon:()=> <HomeIcon height={50} width={50}/>,
+                        title:""
+                    }}
                     component={Home}
                 />
                 <Tab.Screen
@@ -66,7 +75,8 @@ export default function TabNavigation() {
                             borderColor: palette.blue
                         },
                         headerShadowVisible: false,
-                        headerTitle:''
+                        headerTitle:'',
+                        tabBarIcon: ()=> <ProfileIcon height={50} width={50}/>
                     }}
                 />
             </Tab.Navigator>

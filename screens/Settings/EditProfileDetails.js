@@ -212,6 +212,7 @@ export default function EditProfileDetails() {
                                 />
                             )
                         } else {
+                            console.log("default profile image")
                             return (
                                 <Image
                                     resizeMode='cover' 

@@ -6,7 +6,7 @@ import { Text } from "react-native"
  */
 export default function EText({children, style}) {
     return (
-        <Text style={style}>
+        <Text style={[style, {fontFamily:'Nunito-Regular'}]}>
             {children}
         </Text>
     )
