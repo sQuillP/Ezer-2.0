@@ -49,6 +49,8 @@ const default_image_path = "../../assets/png/unknown_user.jpg"
 export default function EditProfileDetails() {
 
     const {user} = useSelector(store => store.auth);
+
+    console.log("USER::: ", user)
     const { capturedPhoto } = useSelector(store => store.data);
 
     const dispatch = useDispatch();
@@ -109,7 +111,7 @@ export default function EditProfileDetails() {
                 console.log('uploading to s3')
                 url = await uploadImageToS3(capturedPhoto);
             }
-
+            console.log(updatePayload);
             updatePayload.image = url;
 
             const profileUpdateResponse = await Ezer.post('/auth',updatePayload, {params:{authType:'updateuser'}});

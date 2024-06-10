@@ -42,7 +42,7 @@ export const signup = createAsyncThunk(
     async ({signupForm}, {rejectWithValue, getState, dispatch})=> {
         try {
             const {capturedPhoto} = getState().data;
-            // console.log("SIGNUP FORM::: ", signupForm);
+            console.log("SIGNUP FORM::: ", signupForm);
             const registerResponse = await Ezer.post("/auth",signupForm, {params:{authType:'signup'}});
             const token = registerResponse.data.data;
             await AsyncStorage.setItem("TOKEN",token);

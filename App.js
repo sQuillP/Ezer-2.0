@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store/store';
 import { useFonts } from 'expo-font';
 import { deactivateKeepAwake } from 'expo-keep-awake';
+import usePushNotifications from './hooks/usePushNotifications';
 
 
 const FONT_PATH = "./fonts/nunito"
@@ -14,6 +15,10 @@ export default function App() {
 
 
   console.log('runinng in app.js');
+
+  const pushtoken = usePushNotifications();
+
+  console.log("PUSH TOKEN", pushtoken);
 
   const [loaded, error] = useFonts({
     "Nunito-Regular": require(`${FONT_PATH}/Nunito-Regular.ttf`),
