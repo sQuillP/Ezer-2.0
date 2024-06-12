@@ -10,13 +10,20 @@ import ViewProfile from "../screens/ViewProfile/ViewProfile";
 
 import {useDispatch} from 'react-redux';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getMe } from "../redux/thunk/authThunk";
-import { setToken } from "../redux/slice/authSlice";
-import { getRelations } from "../redux/thunk/friendsThunk";
 import Camera from '../screens/Camera/Camera';
+import promptPushNotifications from "../global-components/notifications/promptPushNotifications";
+
+
 const Stack = createStackNavigator();
 
 
+/**
+ * @todo: 
+ *  1) deploy notifications in lambda
+ *  2) set up push token in login/signup
+ *  3) set up push notification configuration for a user.
+ *  4) deploy aws layer for push notifications
+ */
 export default function RootNavigation() {
 
 
@@ -24,19 +31,35 @@ export default function RootNavigation() {
     const dispatch = useDispatch();
 
 
+
+    useEffect(()=> {
+        (async ()=> {
+            await promptPushNotifications();
+        })();
+    },[]);
+
+    /**
+     * @description Make sure that push notifications are all fetched
+     * before automatically logging the user in.
+     */
     useEffect(()=> {
         ( async ()=> {
             try {
                 const token = await AsyncStorage.getItem('TOKEN');
+
                 if(token === null) {return;}
-                dispatch(getMe());
-                dispatch(setToken(token));
-                dispatch(getRelations());
+
+                // dispatch(getMe());
+                // dispatch(setToken(token));
+                // dispatch(getRelations());
             } catch(error) {
                 // error fetching token
             }
         })();
     },[]);
+
+
+
 
 
     function isLoggedIn() {

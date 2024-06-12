@@ -4,6 +4,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getRelations } from "./friendsThunk";
 import { uploadImageToS3 } from "../../http/s3/s3";
 import { setPhoto } from "../slice/dataSlice";
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+import getNotificationCredentials from "../../global-components/notifications/getNotificationCredentials";
+
+
+// TODO: Please work on Notification credentials...
+
+
 
 /**
  * @description: Make POST request to login, grab the token and set it in the 
@@ -15,8 +23,10 @@ export const login = createAsyncThunk(
     "auth/login", 
     async ({username, password},{rejectWithValue, getState, dispatch})=> {
         try {
+            //Grab notification credentials
+            const notificationCredentails = await getNotificationCredentials();
             const response = await Ezer.post("/auth",
-                {username, password},
+                {username, password, ...notificationCredentails},
                 {params:{authType:'login'}}
             );
             const token = response.data.data;
@@ -42,18 +52,29 @@ export const signup = createAsyncThunk(
     async ({signupForm}, {rejectWithValue, getState, dispatch})=> {
         try {
             const {capturedPhoto} = getState().data;
-            console.log("SIGNUP FORM::: ", signupForm);
-            const registerResponse = await Ezer.post("/auth",signupForm, {params:{authType:'signup'}});
+
+            //get notification status
+            const notificationCredentails = await getNotificationCredentials();
+            
+            const registerResponse = await Ezer.post("/auth",{...signupForm, ...notificationCredentails}, {params:{authType:'signup'}});
             const token = registerResponse.data.data;
             await AsyncStorage.setItem("TOKEN",token);
             let newUser = null;
             let imageURL = "";
             if(capturedPhoto !== null) {
                 delete signupForm.password;
-                console.log("CAPTURED PHOTO::: ", capturedPhoto.uri);
+                delete signupForm.expoPushToken;
                 imageURL = await uploadImageToS3(capturedPhoto);
                 signupForm.image = imageURL;
-                const updateResponse = await Ezer.post("/auth",signupForm, {params:{authType:"updateuser"}})
+                const updateResponse = await Ezer.post("/auth",{
+                    ...signupForm, 
+                    pushNotificationsEnabled:notificationCredentails.pushNotificationsEnabled
+                }, 
+                {
+                    params:{
+                        authType:"updateuser"
+                    }
+                });
                 newUser = updateResponse.data.data;
             } else {
                 const getMeResponse = await Ezer.post('/auth',{}, {params:{authType:'getme'}});
@@ -61,11 +82,24 @@ export const signup = createAsyncThunk(
             }
             await dispatch(getRelations());
             dispatch(setPhoto(null));
-            console.log("NEW USER::: ", newUser);
             return {newUser, token}
         } catch(error) {
             console.log(error, error.message);
             return rejectWithValue(error.response.status);
+        }
+    }
+)
+
+
+export const loginWithAuthToken = createAsyncThunk(
+    "auth/loginWithAuthToken",
+    async ({}, {rejectWithValue, getState, dispatch})=> {
+        try {
+            const fetchedToken = await AsyncStorage.getItem("TOKEN");
+            await dispatch(getMe());
+            await dispatch(setToken(fetchedToken));
+        } catch(error) {
+
         }
     }
 )
@@ -83,7 +117,6 @@ export const getMe = createAsyncThunk(
         try {
             const getMeResponse = await Ezer.post('/auth',{},{params:{authType: "getme"}});
             const user = getMeResponse.data.data;
-            console.log('get me user: ', user);
             return user;
         } catch(error) {
             return rejectWithValue(error.response.status);

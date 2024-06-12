@@ -25,6 +25,7 @@ import { useNavigation } from '@react-navigation/native';
 import useImagePicker from '../../global-components/ImagePicker/imagePicker';
 import { setPhoto } from '../../redux/slice/dataSlice';
 import { uploadImageToS3 } from '../../http/s3/s3';
+import getNotificationCredentials from '../../global-components/notifications/getNotificationCredentials';
 
 
 
@@ -50,7 +51,6 @@ export default function EditProfileDetails() {
 
     const {user} = useSelector(store => store.auth);
 
-    console.log("USER::: ", user)
     const { capturedPhoto } = useSelector(store => store.data);
 
     const dispatch = useDispatch();
@@ -111,15 +111,18 @@ export default function EditProfileDetails() {
                 console.log('uploading to s3')
                 url = await uploadImageToS3(capturedPhoto);
             }
-            console.log(updatePayload);
+            // 'username','firstName','lastName', 'sobrietyDate', 'image',"pushNotificationsEnabled"
             updatePayload.image = url;
-
-            const profileUpdateResponse = await Ezer.post('/auth',updatePayload, {params:{authType:'updateuser'}});
+            const {pushNotificationsEnabled} = await getNotificationCredentials();
+            console.log({...updatePayload, pushNotificationsEnabled});
+            console.log("PUSHNOTIFICATIONS ENABLED::: ", pushNotificationsEnabled)
+            const profileUpdateResponse = await Ezer.post('/auth',{...updatePayload, pushNotificationsEnabled}, {params:{authType:'updateuser'}});
             const updatedProfile = profileUpdateResponse.data.data;
             dispatch(setUser(updatedProfile));
             dispatch(setPhoto(null));
             setModifiedProfile(false);
         } catch(error) {
+            console.log("Error from updating user.")
             console.log(error,error.message);
         } finally {
             setUpdateMePending(false);
@@ -153,8 +156,6 @@ export default function EditProfileDetails() {
             {text:"Take Photo", onPress: onOpenCamera}
         ]);
     }
-
-    console.log({modifiedProfile, updateMePending})
 
     /**
      * @description revert back to the old profile details

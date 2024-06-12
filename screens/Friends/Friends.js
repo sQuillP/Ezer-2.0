@@ -48,6 +48,11 @@ export default function Friends() {
         setRenderedFriends([...friends])
     },[sent_invites, received_invites]);
 
+
+    useEffect(()=> {
+        
+    },[]);
+
     /**
      * @description reset the form and the search term.
      */

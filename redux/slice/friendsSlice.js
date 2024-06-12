@@ -23,7 +23,6 @@ const initialState = {
         received_invites:[]
     },
     relationsError: false,
-    displaySentNotification: false
 };
 
 
@@ -70,7 +69,6 @@ export const friendAction = createAsyncThunk(
                     {username:payload.username},
                     {params:{action: payload.action}}
                 );
-                dispatch(setSentDisplayNotification(true));
                 console.log("SUCCESSFULLY SENT INVITE");
             } else if(payload.delete_type === 'invite' || payload.delete_type === 'friend') {
                 console.log("DELETING FRIEND REQUEST");

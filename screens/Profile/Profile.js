@@ -12,6 +12,8 @@ export default function Profile() {
     const { user } = useSelector(store => store.auth);
     const dispatch = useDispatch();
 
+    console.log("USER?? ", user);
+
     function openConfirmMenu() {
         Alert.alert("Reset your sobriety counter?","This action cannot be undone",[
             {

@@ -5,11 +5,14 @@ import palette from "../../global-components/palette";
 import styles from './styles/HomeStyle'
 import { View, Image, Pressable, StatusBar } from "react-native";
 import CustomModal from "../../global-components/CustomModal/CustomModal";
+import { useSelector } from "react-redux";
 
 
 export default function Home() {
 
     const [showModal, setShowModal] = useState(false);
+
+    const {user} = useSelector(store => store.auth);
 
     return (
         <SafeAreaView style={{backgroundColor: palette.blue}}>
@@ -28,7 +31,7 @@ export default function Home() {
 
                 />
                 <View style={styles.header}>
-                    <EText style={styles.headerText}>Welcome, William Pattison</EText>
+                    <EText style={styles.headerText}>Welcome, {`${user.firstName} ${user.lastName}`}</EText>
                 </View>
                 <View style={styles.mainButton}>
                     <Pressable onPress={()=> setShowModal(true)}>
