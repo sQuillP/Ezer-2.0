@@ -11,7 +11,7 @@ const initialState = {
     invalidLoginCredentials: false,
 
     signupPending: false,
-
+    signupError:"",
 
     internalServerError: false
 };
@@ -70,10 +70,12 @@ const authSlice = createSlice({
 
         builder.addCase(signup.pending, (state, {payload})=> {
             state.signupPending = true;
+            state.signupError = "";
         });
 
         builder.addCase(signup.rejected, (state, {payload})=> {
             state.signupPending = false;
+            state.signupError = payload;
         })
 
         builder.addCase(getMe.fulfilled, (state, {payload})=> {

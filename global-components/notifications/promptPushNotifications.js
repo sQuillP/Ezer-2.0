@@ -6,7 +6,8 @@ import * as Notifications from 'expo-notifications';
 
   /**
    * @description Ask the user for permission to use notifications. 
-   * This should run every time the application starts up.
+   * This should run every time the application starts up. This will also set the 
+   * configuration for getting notifications to work.
    * @returns 
    */
   export default async function promptPushNotifications() {
@@ -19,6 +20,14 @@ import * as Notifications from 'expo-notifications';
         lightColor: '#FF231F7C',
       });
     }
+
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      }),
+    });
 
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
   

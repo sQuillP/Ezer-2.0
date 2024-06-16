@@ -39,7 +39,7 @@ export default function CustomModal({modalProps,title, confirmText, declineText,
                                 ({pressed})=> {
                                     return (
                                         <View style={[styles.button, {backgroundColor: pressed ? palette.darkerror:palette.error}]}>
-                                            <EText style={styles.textStyle}>{declineText}</EText>
+                                            <EText style={[styles.textStyle,{ fontFamily:'Nunito-Bold'}]}>{declineText}</EText>
                                         </View>
                                     )
                                 }

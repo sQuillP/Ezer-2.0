@@ -9,6 +9,7 @@ import { Alert } from "react-native";
 import { Ezer } from "../../http/Ezer";
 import { useDispatch, useSelector } from "react-redux";
 import { syncRelations } from "../../redux/slice/friendsSlice";
+import CustomModal from "../../global-components/CustomModal/CustomModal";
 
 export default function ViewProfile({navigation, route }) {
 
@@ -17,6 +18,8 @@ export default function ViewProfile({navigation, route }) {
     const { top, left, bottom, right} = useSafeAreaInsets();
 
     const [removingFriend, setRemovingFriend] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
+
 
     const {relations} = useSelector(store => store.friends)
 
@@ -36,8 +39,10 @@ export default function ViewProfile({navigation, route }) {
             const friendsResponse = await Ezer.delete("/friends",{data:{username:user.username}, params:{delete_type:'friend'}});
             const updatedRelations = friendsResponse.data.data;
             dispatch(syncRelations(updatedRelations));
+            setOpenModal(false);
             navigation.goBack();
         } catch(error) {
+            setOpenModal(false);
             Alert.alert("Unable to remove friend", "Try checking your network connection",[
                 {text:"OK", onPress: ()=> null},
             ])
@@ -46,10 +51,23 @@ export default function ViewProfile({navigation, route }) {
         }
     }
 
-    console.log(relations.friends.find(u => u.username === user.username));
 
     return (
         <View style={[styles.container, {paddingTop: top, paddingLeft: left, paddingRight: right}]}>
+            <CustomModal
+                modalProps={{
+                    visible: openModal,
+                    animationType: 'slide',
+                    transparent:true,
+                    onRequestClose: ()=> setOpenModal(false)
+                }}
+                acceptAction={onRemoveFriend}
+                title={`Are you sure you want to remove ${user.username} as a friend?`}
+                confirmText={"Delete"}
+                declineText={"Cancel"}
+            >
+
+            </CustomModal>
             <StatusBar barStyle={'dark-content'}/>
             <View style={styles.main}>
                 <View style={styles.top}>
@@ -80,7 +98,7 @@ export default function ViewProfile({navigation, route }) {
                         relations.friends.find(_user => _user.username === user.username) !== undefined && (
                             <View style={{flex: 1, alignItems:'flex-end', flexDirection:"row", justifyContent:'center'}}>
                                 <Pressable 
-                                    onPress={onRemoveFriend}
+                                    onPress={()=> setOpenModal(true)}
                                     style={{width: '100%', alignItems:'center'}}>
                                     {
                                         ({pressed})=> {

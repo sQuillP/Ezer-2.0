@@ -12,6 +12,7 @@ import {useDispatch} from 'react-redux';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Camera from '../screens/Camera/Camera';
 import promptPushNotifications from "../global-components/notifications/promptPushNotifications";
+import { loginWithAuthToken } from "../redux/thunk/authThunk";
 
 
 const Stack = createStackNavigator();
@@ -46,14 +47,9 @@ export default function RootNavigation() {
         ( async ()=> {
             try {
                 const token = await AsyncStorage.getItem('TOKEN');
-
                 if(token === null) {return;}
-
-                // dispatch(getMe());
-                // dispatch(setToken(token));
-                // dispatch(getRelations());
+                dispatch(loginWithAuthToken());
             } catch(error) {
-                // error fetching token
             }
         })();
     },[]);

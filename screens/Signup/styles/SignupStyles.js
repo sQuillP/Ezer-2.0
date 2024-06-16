@@ -58,6 +58,12 @@ export default StyleSheet.create({
         borderRadius: 1000,
         borderWidth: 4,
         borderColor: "gray"
+    },
+    errorMessage: {
+        color: palette.error,
+        fontSize:20,
+        marginBottom: 5,
+        fontFamily:'Nunito-Bold'
     }
 
 });

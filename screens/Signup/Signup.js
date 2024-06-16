@@ -41,9 +41,8 @@ export default function Signup() {
 
     const [signupForm, setSignupForm] = useState(DEFAULT_FORM);
 
-    const {signupPending} = useSelector(store=> store.auth);
+    const {signupPending, signupError} = useSelector(store=> store.auth);
 
-    const [signupError, setSignupError] = useState("");
     const navigation = useNavigation();
 
     const { capturedPhoto } = useSelector(store => store.data);
@@ -163,9 +162,6 @@ export default function Signup() {
                                 style={styles.input}/>
                         </View>
                     </View>
-                    <View>
-                        {signupError && <EText style={{color: palette.error, marginBottom: 5}}>{signupError}</EText>}
-                    </View>
                     <View style={styles.imageContainer}>
                         {
                             capturedPhoto !== null ? (
@@ -213,7 +209,8 @@ export default function Signup() {
                             )
                         }
                     </View>
-                    <View style={{flexDirection: 'row', justifyContent:'center', alignItems:'center'}}>
+                    <View style={{flexDirection: 'column', justifyContent:'center', alignItems:'center'}}>
+                        { signupError && <EText style={styles.errorMessage}>{signupError}</EText>}
                         <Pressable
                             onPress={onSignup}
                             style={{width: '100%', alignItems:'center'}}
