@@ -32,6 +32,7 @@ export default function RootNavigation() {
     const dispatch = useDispatch();
 
 
+    console.log(user, token)
 
     useEffect(()=> {
         (async ()=> {
@@ -48,6 +49,7 @@ export default function RootNavigation() {
             try {
                 const token = await AsyncStorage.getItem('TOKEN');
                 if(token === null) {return;}
+                console.log('should login with auth token');
                 dispatch(loginWithAuthToken());
             } catch(error) {
             }

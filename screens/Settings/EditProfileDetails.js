@@ -123,6 +123,7 @@ export default function EditProfileDetails() {
             setModifiedProfile(false);
         } catch(error) {
             console.log("Error from updating user.")
+            onDiscardFormChanges();
             console.log(error,error.message);
         } finally {
             setUpdateMePending(false);

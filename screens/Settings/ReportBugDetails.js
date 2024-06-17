@@ -6,6 +6,7 @@ import {
     TextInput,
     TouchableOpacity,
     Alert,
+    ActivityIndicator,
 } from 'react-native';
 
 import styles from './styles/ReportBugDetails';
@@ -13,6 +14,7 @@ import styles from './styles/ReportBugDetails';
 import EText from '../../global-components/EText/EText';
 import { Ezer } from '../../http/Ezer';
 import CustomModal from '../../global-components/CustomModal/CustomModal';
+import palette from '../../global-components/palette';
 
 
 export default function ReportBugDetails() {
@@ -63,11 +65,18 @@ export default function ReportBugDetails() {
                 placeholderTextColor={'rgb(90,90,90)'}
             />
             <TouchableOpacity
-                style={[styles.submitBtn,{opacity:validReport === false ?0.5:1} ]}
+                style={[styles.submitBtn,{opacity:(validReport === false || sendingBugReport )?0.5:1} ]}
                 onPress={handleSubmitBugDetails}
-                disabled={validReport === false}
+                disabled={validReport === false || sendingBugReport}
             >
-                <EText style={[styles.baseFont, styles.btnText]}>Submit Bug Report</EText>
+                {
+                    sendingBugReport === false ? (
+                    <EText style={[styles.baseFont, styles.btnText]}>Submit Bug Report</EText>
+                    ): (
+                        <ActivityIndicator size={'small'} color={palette.light}/>
+                    )
+                    
+                }
             </TouchableOpacity>
         </View>
     )

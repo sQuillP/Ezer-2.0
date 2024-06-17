@@ -8,7 +8,6 @@ import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import getNotificationCredentials from "../../global-components/notifications/getNotificationCredentials";
 
-import { setToken } from "../slice/authSlice";
 
 // TODO: Please work on Notification credentials...
 
@@ -94,11 +93,13 @@ export const signup = createAsyncThunk(
 
 export const loginWithAuthToken = createAsyncThunk(
     "auth/loginWithAuthToken",
-    async ({}, {rejectWithValue, getState, dispatch})=> {
+    async (_, {rejectWithValue, getState, dispatch})=> {
         try {
+            console.log('in loginwithauthtoken');
             const fetchedToken = await AsyncStorage.getItem("TOKEN");
             await dispatch(getMe());
-            dispatch(setToken(fetchedToken));
+            console.log("logging in with auth token", fetchedToken);
+            return fetchedToken;
         } catch(error) {
             console.log('ERROR!', error.message, error);
         }

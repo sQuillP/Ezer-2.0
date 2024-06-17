@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getMe, login, signup } from "../thunk/authThunk";
+import { getMe, login, loginWithAuthToken, signup } from "../thunk/authThunk";
 const initialState = {
     token: null,
     pushToken: null,
@@ -80,18 +80,27 @@ const authSlice = createSlice({
 
         builder.addCase(getMe.fulfilled, (state, {payload})=> {
             state.user = payload;
-            state.loginPending = false;
 
         });
 
         builder.addCase(getMe.rejected, (state, {payload})=> {
-            state.loginPending = false;
             state.internalServerError = true;
         });
 
-        builder.addCase(getMe.pending, (state, _)=> {
+
+        builder.addCase(loginWithAuthToken.fulfilled, (state, {payload})=> {
+            console.log('loginwithauthtoken payload', payload)
+            state.token = payload;
+            state.loginPending = false;
+        });
+
+        builder.addCase(loginWithAuthToken.pending, (state,{payload})=> {
             state.loginPending = true;
         });
+
+        builder.addCase(loginWithAuthToken.rejected, (state, {payload})=> {
+            state.loginPending = false;
+        })
 
     }
 });

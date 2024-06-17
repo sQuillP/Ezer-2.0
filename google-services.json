@@ -1,0 +1,54 @@
+{
+    "project_info": {
+      "project_number": "100484998766",
+      "project_id": "ezer-384019",
+      "storage_bucket": "ezer-384019.appspot.com"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:100484998766:android:934c9e97fc4adafc0ce87f",
+          "android_client_info": {
+            "package_name": "com.ezer.androidClient"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "100484998766-8eod1rrvtd9si3lviotfl71aqq9lvr8c.apps.googleusercontent.com",
+            "client_type": 1,
+            "android_info": {
+              "package_name": "com.ezer.androidClient",
+              "certificate_hash": "d6ac3e20b37856bdd0b7da8ca6db40cef7cbc858"
+            }
+          },
+          {
+            "client_id": "100484998766-r19i15u71mij570nlv1326e9l979msmj.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyDHnU-tCSouXUcDOAHSEiCZnBg2c158cSE"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "100484998766-r19i15u71mij570nlv1326e9l979msmj.apps.googleusercontent.com",
+                "client_type": 3
+              },
+              {
+                "client_id": "100484998766-otlanfh6qrom0p5vs58k684ilncm7bg1.apps.googleusercontent.com",
+                "client_type": 2,
+                "ios_info": {
+                  "bundle_id": "com.ezer.IOSClient"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }
