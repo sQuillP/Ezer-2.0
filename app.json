@@ -30,6 +30,9 @@
       ],
       "expo-font"
     ],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier":"com.ezer.IOSClient",
