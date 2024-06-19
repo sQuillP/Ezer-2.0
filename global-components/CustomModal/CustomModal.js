@@ -7,7 +7,6 @@ export default function CustomModal({modalProps,title, confirmText, declineText,
 
 
     function onConfirmPress() {
-        console.log('some business logic');
         acceptAction();
     }
 
@@ -18,33 +17,44 @@ export default function CustomModal({modalProps,title, confirmText, declineText,
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                     <EText style={styles.modalText}>{title}</EText>
+
                     <View style={{flexDirection:'row'}}>
-                        <Pressable
-                        style={[{marginRight:10, }]}
-                        onPress={onConfirmPress}>
-                            {
-                                ({pressed})=> {
-                                    return (
-                                        <View style={[styles.button, {backgroundColor:  pressed? palette.darkgreen :palette.green}]}>
-                                            <EText style={styles.textStyle}>{confirmText}</EText>
-                                        </View>
-                                    )
+                    {
+                        confirmText && (
+                            <Pressable
+                                style={[{marginRight:10, }]}
+                                onPress={onConfirmPress}
+                            >
+                                {
+                                    ({pressed})=> {
+                                        return (
+                                            <View style={[styles.button, {backgroundColor:  pressed? palette.darkgreen :palette.green}]}>
+                                                <EText style={styles.textStyle}>{confirmText}</EText>
+                                            </View>
+                                        )
+                                    }
                                 }
-                            }
-                        </Pressable>
-                        <Pressable
-                            onPress={modalProps.onRequestClose}
-                        >
-                            {
-                                ({pressed})=> {
-                                    return (
-                                        <View style={[styles.button, {backgroundColor: pressed ? palette.darkerror:palette.error}]}>
-                                            <EText style={[styles.textStyle,{ fontFamily:'Nunito-Bold'}]}>{declineText}</EText>
-                                        </View>
-                                    )
+                            </Pressable>
+                        )
+                    }
+
+                    {
+                        declineText && (
+                            <Pressable
+                                onPress={modalProps.onRequestClose}
+                            >
+                                {
+                                    ({pressed})=> {
+                                        return (
+                                            <View style={[styles.button, {backgroundColor: pressed ? palette.darkerror:palette.error}]}>
+                                                <EText style={[styles.textStyle,{ fontFamily:'Nunito-Bold'}]}>{declineText}</EText>
+                                            </View>
+                                        )
+                                    }
                                 }
-                            }
-                        </Pressable>
+                            </Pressable>
+                        )
+                    }
                     </View>
                 </View>
             </View>

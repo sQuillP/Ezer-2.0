@@ -34,7 +34,7 @@ export const login = createAsyncThunk(
             // Set the jwt token
             await AsyncStorage.setItem("TOKEN", token);
             // Now grab the user
-            const userResponse = await Ezer.post('/auth',{},{params:{authType:"getme"}});
+            const userResponse = await Ezer.get('/auth',{},{params:{authType:"getme"}});
             const user = userResponse.data.data;
             //Load the relations data while we're at it.
             await dispatch(getRelations());
@@ -66,7 +66,7 @@ export const signup = createAsyncThunk(
                 delete signupForm.expoPushToken;
                 imageURL = await uploadImageToS3(capturedPhoto);
                 signupForm.image = imageURL;
-                const updateResponse = await Ezer.post("/auth",{
+                const updateResponse = await Ezer.put("/auth",{
                     ...signupForm, 
                     pushNotificationsEnabled:notificationCredentails.pushNotificationsEnabled
                 }, 
@@ -77,7 +77,7 @@ export const signup = createAsyncThunk(
                 });
                 newUser = updateResponse.data.data;
             } else {
-                const getMeResponse = await Ezer.post('/auth',{}, {params:{authType:'getme'}});
+                const getMeResponse = await Ezer.get('/auth',{params:{authType:'getme'}});
                 newUser = getMeResponse.data.data;
             }
             await dispatch(getRelations());
@@ -117,7 +117,7 @@ export const getMe = createAsyncThunk(
     "auth/getMe",
     async (_,{rejectWithValue, getState})=> {
         try {
-            const getMeResponse = await Ezer.post('/auth',{},{params:{authType: "getme"}});
+            const getMeResponse = await Ezer.get('/auth',{params:{authType: "getme"}});
             const user = getMeResponse.data.data;
             return user;
         } catch(error) {

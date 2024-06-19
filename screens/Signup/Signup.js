@@ -3,7 +3,6 @@ import SafeAreaView from "../../global-components/SafeAreaView/SafeAreaView";
 import styles from './styles/SignupStyles';
 import {
     View,
-    Text,
     Pressable,
     Image,
     Alert,
@@ -14,27 +13,22 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview"
 import palette from "../../global-components/palette";
 import { useNavigation } from "@react-navigation/native";
 import EText from "../../global-components/EText/EText";
-import { Ezer } from "../../http/Ezer";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../redux/slice/authSlice";
 import { useSelector } from "react-redux";
 import { AntDesign } from '@expo/vector-icons';
 import { Camera } from "expo-camera";
 import { setPhoto } from "../../redux/slice/dataSlice";
 import useImagePicker from "../../global-components/ImagePicker/imagePicker";
-import { uploadImageToS3 } from "../../http/s3/s3";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getRelations } from "../../redux/thunk/friendsThunk";
 import { signup } from "../../redux/thunk/authThunk";
 import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 
 const DEFAULT_FORM = {
-    username:'squilliam111',
-    firstName:'william',
-    lastName:'pattison',
-    password:'abc123',
+    username:'',
+    firstName:'',
+    lastName:'',
+    password:'',
 };
 
 export default function Signup() {

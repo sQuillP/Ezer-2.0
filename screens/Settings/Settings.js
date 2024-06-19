@@ -13,6 +13,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import { useDispatch } from 'react-redux';
 import { signOut } from '../../redux/slice/authSlice';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import DeleteAccount from './DeleteAccount';
 
 export default function Settings() {
 
@@ -44,6 +45,12 @@ export default function Settings() {
                     <MaterialIcons name="logout" style={{marginRight: 5}} size={24} color="white" />
                     <EText style={[styles.buttonText, ]}>Log Out</EText>
                 </TouchableOpacity>
+                <Accordian
+                    expanded={false}
+                    title='Delete Account'
+                >
+                    <DeleteAccount/>
+                </Accordian>
             </View>
         </KeyboardAwareScrollView>
     )

@@ -41,7 +41,7 @@ export default function Profile() {
         console.log('resetting the sobriety counter');
         try {
             const updateBody = {...user,sobrietyDate: Date.now().toString()}
-            const updateResponse = await Ezer.post('/auth', updateBody,{params:{authType:'updateuser'}});
+            const updateResponse = await Ezer.put('/auth', updateBody,{params:{authType:'updateuser'}});
             const updatedUser = updateResponse.data.data;
             dispatch(setUser(updatedUser));
         } catch(error) {

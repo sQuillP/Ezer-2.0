@@ -116,7 +116,7 @@ export default function EditProfileDetails() {
             const {pushNotificationsEnabled} = await getNotificationCredentials();
             console.log({...updatePayload, pushNotificationsEnabled});
             console.log("PUSHNOTIFICATIONS ENABLED::: ", pushNotificationsEnabled)
-            const profileUpdateResponse = await Ezer.post('/auth',{...updatePayload, pushNotificationsEnabled}, {params:{authType:'updateuser'}});
+            const profileUpdateResponse = await Ezer.put('/auth',{...updatePayload, pushNotificationsEnabled}, {params:{authType:'updateuser'}});
             const updatedProfile = profileUpdateResponse.data.data;
             dispatch(setUser(updatedProfile));
             dispatch(setPhoto(null));

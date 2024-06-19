@@ -15,8 +15,6 @@ export async function uploadImageToS3(imageObject) {
     const fileToUpload = new File([blob],`new_image.${imageExt}`);
     const linkResponse = await Ezer.post('/auth',{ extension:imageExt},{params:{authType: 'imagelink'}});//get signed url
     const s3Link = linkResponse.data.data;
-
-    console.log('s3 link', s3Link)
     //Make PUT request to aws s3 bucket
     const response = await fetch(s3Link,{ 
         method: 'PUT', 
@@ -24,8 +22,6 @@ export async function uploadImageToS3(imageObject) {
         body: fileToUpload
     });
     const imageURL = s3Link.split('?')[0];
-    console.log('url::: ', imageURL);
-    console.log(response);
     return imageURL;
 }
 
