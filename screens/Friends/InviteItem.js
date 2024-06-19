@@ -23,71 +23,63 @@ export default function InviteItem({invite, onShowConfirmModal, sent, last=false
     }
 
     return (
-        <Pressable onPress={()=> navigation.navigate("ViewProfile", {user:invite})}>
-        {
-            ({pressed})=> {
-                return (
-                    <View style={[styles.main, last===true ?{}:styles.last, {opacity: pressed === true ? 0.5: 1}]}>
-                        {
-                            invite.image ? (
-                                <Image 
-                                    source={{uri: invite.image}}
-                                    style={styles.image}
-                                    loadingIndicatorSource={require('../../assets/png/unknown_user.jpg')}
-                                />
-                            ):(
-                                <Image 
-                                    source={require('../../assets/png/unknown_user.jpg')}
-                                    style={styles.image}
-                                    loadingIndicatorSource={require('../../assets/png/unknown_user.jpg')}
-                                />
-                            )
-                        }
-                        <View style={styles.contentContainer}>
-                            <EText style={styles.topText}>{invite.firstName + " " + invite.lastName}</EText>
-                            <EText style={styles.bottomText}>@{invite.username}</EText>
-                            <View style={styles.bottomContent}>
-                                {
-                                    sent === true ? (
-                                    <View style={styles.btns}>
-                                            <Pressable 
-                                                onPress={handleCancelInvite}
-                                                style={{marginRight: 5}}>
-                                                {
-                                                    ({pressed})=> {
-                                                        return (
-                                                            <View style={[styles.chip, {backgroundColor: pressed ? palette.darkerror: palette.error, paddingHorizontal: 30}]}>
-                                                                <EText style={styles.chipText}>Cancel</EText>
-                                                            </View>
-                                                        )
-                                                    }
-                                                }
-                                            </Pressable>
-                                            {/* <View style={styles.chip}><EText style={styles.chipText}>Pending</EText></View> */}
-                                    </View>
-                                    ): (
-                                        <View style={styles.btns}>
-                                            <Pressable style={[{marginRight: 10}]} onPress={()=> onShowConfirmModal(true)}>
-                                                <View style={[styles.chip, {backgroundColor: palette.error}]}>
-                                                    <EText style={[styles.chipText]}>Reject</EText>
-                                                </View>
-                                            </Pressable>
-                                            <Pressable 
-                                                onPress={handleAccept}
-                                            >
-                                                <View style={[styles.chip, {backgroundColor: palette.green}]}>
-                                                    <EText style={styles.chipText}>Accept</EText>
-                                                </View>
-                                            </Pressable>
-                                        </View>
-                                    )
-                                }
-                            </View>
-                        </View>
-                    </View>
+        <View style={[styles.main, last===true ?{}:styles.last]}>
+            {
+                invite.image ? (
+                    <Image 
+                        source={{uri: invite.image}}
+                        style={styles.image}
+                        loadingIndicatorSource={require('../../assets/png/unknown_user.jpg')}
+                    />
+                ):(
+                    <Image 
+                        source={require('../../assets/png/unknown_user.jpg')}
+                        style={styles.image}
+                        loadingIndicatorSource={require('../../assets/png/unknown_user.jpg')}
+                    />
                 )
             }
-        }
-        </Pressable>
+            <View style={styles.contentContainer}>
+                <EText style={styles.topText}>{invite.firstName + " " + invite.lastName}</EText>
+                <EText style={styles.bottomText}>@{invite.username}</EText>
+                <View style={styles.bottomContent}>
+                    {
+                        sent === true ? (
+                        <View style={styles.btns}>
+                                <Pressable 
+                                    onPress={handleCancelInvite}
+                                    style={{marginRight: 5}}>
+                                    {
+                                        ({pressed})=> {
+                                            return (
+                                                <View style={[styles.chip, {backgroundColor: pressed ? palette.darkerror: palette.error, paddingHorizontal: 30}]}>
+                                                    <EText style={styles.chipText}>Cancel</EText>
+                                                </View>
+                                            )
+                                        }
+                                    }
+                                </Pressable>
+                                {/* <View style={styles.chip}><EText style={styles.chipText}>Pending</EText></View> */}
+                        </View>
+                        ): (
+                            <View style={styles.btns}>
+                                <Pressable style={[{marginRight: 10}]} onPress={()=> onShowConfirmModal(true)}>
+                                    <View style={[styles.chip, {backgroundColor: palette.error}]}>
+                                        <EText style={[styles.chipText]}>Reject</EText>
+                                    </View>
+                                </Pressable>
+                                <Pressable 
+                                    onPress={handleAccept}
+                                >
+                                    <View style={[styles.chip, {backgroundColor: palette.green}]}>
+                                        <EText style={styles.chipText}>Accept</EText>
+                                    </View>
+                                </Pressable>
+                            </View>
+                        )
+                    }
+                </View>
+            </View>
+        </View>
     )
 }

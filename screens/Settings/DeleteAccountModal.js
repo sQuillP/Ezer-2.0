@@ -16,6 +16,7 @@ import storageKeys from "../../global-components/storageKeys";
 const PASSPHRASE = "Permanently Delete";
 const MAX_RETRIES = 3;
 const RESET_DURATION = 1000*60*3;
+const LOCKED_ERROR = "Please wait 3 minutes before attempting to delete your account";
 
 export default function DeleteAccountModal({
     visible,
@@ -36,45 +37,68 @@ export default function DeleteAccountModal({
 
 
     useEffect(()=> {
+        //Prevent accidental deletion by just clearing the fields.
+        setPassword("");
+        setPassphrase("");
+
         ( async ()=> {
-            await canAttemptAccountDelete();
+            await shouldDisableAccountDeletion();
         })();
     },[visible]);
 
 
 
-    async function updateStorageError() {
+    /**
+     * @description Increment the number of retries that a user has failed to
+     * delete their account. This function must only be called when user attempts an unsuccessful
+     * delete due to invalid password.
+     * @throws Error if async storage fails somehow.
+     */
+    async function incrementRetry() {
         try {
-            const currentCount = await AsyncStorage.getItem(storageKeys.INVALID_PASSWORD_COUNTER)
-            const invalidLoginCounter = Number((currentCount || 0));
-            // disable the users ability to try again for another 3 minutes.\
-            if(currentCount >= MAX_RETRIES) {
-                const retryPunishment = (new Date().getTime()+RESET_DURATION).toString();
-                await AsyncStorage.setItem(storageKeys.RETRY_TIMESTAMP,retryPunishment);
+            //Fetch count from async storage
+            const currentCount = parseInt(((await AsyncStorage.getItem(storageKeys.INVALID_PASSWORD_COUNTER)) || 0), 10 );
+            //cast as int
+            const invalidDeleteCounter = Number((currentCount || 0));
+            //update async storage with the count + 1 as the increment.
+            await AsyncStorage.setItem(storageKeys.INVALID_PASSWORD_COUNTER,(invalidDeleteCounter+1).toString());
+
+            //add timestamp if delete counter >= max_retries.
+            if(invalidDeleteCounter + 1 >= MAX_RETRIES) {
+                const punishTimeStamp = (new Date().getTime()+RESET_DURATION).toString();
+                await AsyncStorage.setItem(storageKeys.RETRY_TIMESTAMP, punishTimeStamp);
+                setErrorMessage(LOCKED_ERROR);
                 setCooldownError(true);
-                setErrorMessage("Please wait 3 minutes before attempting to delete your account");
             }
-            await AsyncStorage.setItem(storageKeys.INVALID_PASSWORD_COUNTER,(invalidLoginCounter+1).toString());
         } catch(error) {
             console.log('async storage failed');
         }
     }
 
 
-    async function canAttemptAccountDelete() {
+    /**
+     * @description: Updates UI to either enable or disable account deletion
+     * depending if the current time is past the allotted punishment duration.
+     * If it is past the punishment duration, then reset the invalid password counter.
+     * This function should be called when opening up the modal component
+     */
+    async function shouldDisableAccountDeletion(){
         try {
-            const timestamp = new Date(parseInt(await AsyncStorage.getItem(storageKeys.RETRY_TIMESTAMP), 10));
-            console.log(timestamp);
-            if(timestamp !== null && timestamp > Date.now()) {
-                console.log('cannot attempt to delete');
-                setErrorMessage("Please wait 3 minutes before attempting to delete your account.")
-                return false;
+            const timestamp = parseInt(((await AsyncStorage.getItem(storageKeys.RETRY_TIMESTAMP)) || 0), 10);
+            if(Date.now() < timestamp){
+                //lock delete button
+                setCooldownError(true);
+                setErrorMessage(LOCKED_ERROR);
+            } else {
+                // unlock the delete button and reset the retry counter.
+                await AsyncStorage.setItem(storageKeys.INVALID_PASSWORD_COUNTER, '0');
+                setCooldownError(false);
+                setErrorMessage("");
             }
-            await AsyncStorage.setItem(storageKeys.INVALID_PASSWORD_COUNTER,'0');
-            return true;
         } catch(error) {
-            //Just let the user delete if their storage is somehow full.
-            return true;
+            //unlock everything if async storage is not working correctly.
+            setCooldownError(false);
+            setErrorMessage("")
         }
     }
 
@@ -88,7 +112,7 @@ export default function DeleteAccountModal({
         } catch(error) {
             if(error.response.status === 401){
                 setErrorMessage("Invalid Password. Please try again");
-                await updateStorageError();
+                await incrementRetry();
             } else {
                 setErrorMessage("Internal server error. Please check your connection");
             }

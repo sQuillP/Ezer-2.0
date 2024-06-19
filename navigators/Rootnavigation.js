@@ -11,9 +11,9 @@ import ViewProfile from "../screens/ViewProfile/ViewProfile";
 import {useDispatch} from 'react-redux';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Camera from '../screens/Camera/Camera';
-import promptPushNotifications from "../global-components/notifications/promptPushNotifications";
+import setupPushNotifications from "../global-components/notifications/promptPushNotifications";
 import { loginWithAuthToken } from "../redux/thunk/authThunk";
-
+import storageKeys from "../global-components/storageKeys";
 
 const Stack = createStackNavigator();
 
@@ -30,14 +30,17 @@ export default function RootNavigation() {
 
     const { user, token } = useSelector(store => store.auth);
     const dispatch = useDispatch();
+    
 
 
     console.log(user, token)
 
     useEffect(()=> {
         (async ()=> {
-            await promptPushNotifications();
+            await setupPushNotifications();
         })();
+
+
     },[]);
 
     /**
@@ -47,7 +50,7 @@ export default function RootNavigation() {
     useEffect(()=> {
         ( async ()=> {
             try {
-                const token = await AsyncStorage.getItem('TOKEN');
+                const token = await AsyncStorage.getItem(storageKeys.TOKEN);
                 if(token === null) {return;}
                 console.log('should login with auth token');
                 dispatch(loginWithAuthToken());

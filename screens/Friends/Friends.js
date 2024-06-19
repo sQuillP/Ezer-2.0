@@ -134,9 +134,9 @@ export default function Friends() {
                         animationType:'slide',
                         transparent:true
                     }}
-                    title={"Reject this users invite?"}
+                    title={"Reject Friend Request?"}
                     confirmText={"Reject"}
-                    declineText={"Keep Invite"}
+                    declineText={"Cancel"}
 
                 />
                 <StatusBar barStyle={'light-content'}/>

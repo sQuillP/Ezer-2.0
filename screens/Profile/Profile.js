@@ -6,6 +6,7 @@ import palette from "../../global-components/palette";
 import { useSelector, useDispatch } from "react-redux";
 import { Ezer } from "../../http/Ezer";
 import { setUser } from "../../redux/slice/authSlice";
+import getNotificationCredentials from "../../global-components/notifications/getNotificationCredentials";
 
 export default function Profile() {
 
@@ -40,7 +41,8 @@ export default function Profile() {
     async function onResetSobrietyCounter() {
         console.log('resetting the sobriety counter');
         try {
-            const updateBody = {...user,sobrietyDate: Date.now().toString()}
+            const { pushNotificationsEnabled } = await getNotificationCredentials();
+            const updateBody = {...user, pushNotificationsEnabled, sobrietyDate: Date.now().toString()}
             const updateResponse = await Ezer.put('/auth', updateBody,{params:{authType:'updateuser'}});
             const updatedUser = updateResponse.data.data;
             dispatch(setUser(updatedUser));

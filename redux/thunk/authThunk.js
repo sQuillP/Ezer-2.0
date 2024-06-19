@@ -7,6 +7,7 @@ import { setPhoto } from "../slice/dataSlice";
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import getNotificationCredentials from "../../global-components/notifications/getNotificationCredentials";
+import storageKeys from "../../global-components/storageKeys";
 
 
 // TODO: Please work on Notification credentials...
@@ -96,8 +97,9 @@ export const loginWithAuthToken = createAsyncThunk(
     async (_, {rejectWithValue, getState, dispatch})=> {
         try {
             console.log('in loginwithauthtoken');
-            const fetchedToken = await AsyncStorage.getItem("TOKEN");
+            const fetchedToken = await AsyncStorage.getItem(storageKeys.TOKEN);
             await dispatch(getMe());
+            await dispatch(getRelations());
             console.log("logging in with auth token", fetchedToken);
             return fetchedToken;
         } catch(error) {

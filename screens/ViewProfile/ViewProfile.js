@@ -10,8 +10,10 @@ import { Ezer } from "../../http/Ezer";
 import { useDispatch, useSelector } from "react-redux";
 import { syncRelations } from "../../redux/slice/friendsSlice";
 import CustomModal from "../../global-components/CustomModal/CustomModal";
+import { Entypo } from '@expo/vector-icons';
 
-export default function ViewProfile({navigation, route }) {
+
+export default function ViewProfile({ navigation, route }) {
 
     const {user} = route.params;
 
@@ -53,7 +55,13 @@ export default function ViewProfile({navigation, route }) {
 
 
     return (
-        <View style={[styles.container, {paddingTop: top, paddingLeft: left, paddingRight: right}]}>
+        <View style={[styles.container, {paddingTop: top, paddingLeft: left, paddingRight: right, position:'relative'}]}>
+            <Pressable
+                onPress={()=> navigation.goBack()}
+                style={{position: 'absolute', top, left: left+10, zIndex:2}}
+            >
+                <Entypo name="chevron-left" size={50} color={'black'}/>
+            </Pressable>
             <CustomModal
                 modalProps={{
                     visible: openModal,
@@ -65,9 +73,7 @@ export default function ViewProfile({navigation, route }) {
                 title={`Are you sure you want to remove ${user.username} as a friend?`}
                 confirmText={"Delete"}
                 declineText={"Cancel"}
-            >
-
-            </CustomModal>
+            />
             <StatusBar barStyle={'dark-content'}/>
             <View style={styles.main}>
                 <View style={styles.top}>

@@ -3,7 +3,6 @@ import { getMe, login, loginWithAuthToken, signup } from "../thunk/authThunk";
 const initialState = {
     token: null,
     pushToken: null,
-    enablePushNotifications: null,
     user: null,
 
     //Login state, mostly for UI purposes.
@@ -35,9 +34,6 @@ const authSlice = createSlice({
         setPushToken: (state, {payload})=> {
             state.pushToken = payload;
         },
-        setEnablePushNotifications: (state, {payload})=> {
-            state.enablePushNotifications = payload;
-        }
     },
     extraReducers: (builder)=> {
 
@@ -89,7 +85,6 @@ const authSlice = createSlice({
 
 
         builder.addCase(loginWithAuthToken.fulfilled, (state, {payload})=> {
-            console.log('loginwithauthtoken payload', payload)
             state.token = payload;
             state.loginPending = false;
         });
@@ -106,6 +101,6 @@ const authSlice = createSlice({
 });
 
 
-export const { signOut, setPushToken, setEnablePushNotifications, setToken, setUser } = authSlice.actions;
+export const { signOut, setPushToken, setToken, setUser } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -15,13 +15,6 @@ export default function DeleteAccount() {
     const [password, setPassword] = useState('');
     const [passphrase, setPassphrase] = useState('');
 
-    async function onDeleteAccount() {
-        try {
-
-        } catch(error) {
-
-        }
-    }
 
     return (
         <View>
