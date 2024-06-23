@@ -35,7 +35,10 @@ export default function Login() {
 
     const dispatch = useDispatch();
     const navigation = useNavigation();
-
+    
+    function disableLogin() {
+        return username.trim() === "" || password.trim() === "";
+    }
 
 
     return (
@@ -77,8 +80,11 @@ export default function Login() {
                                         <ActivityIndicator size={'large'}/>
                                     ):(
                                         <>
-                                            <TouchableOpacity onPress={()=> dispatch(login({username, password}))}>
-                                                <View style={[styles.button,{backgroundColor:palette.green }]}>
+                                            <TouchableOpacity 
+                                                onPress={()=> dispatch(login({username, password}))}
+                                                disabled={disableLogin()}
+                                            >
+                                                <View style={[styles.button,{backgroundColor:palette.green, opacity: disableLogin() ? 0.5 : 1.0 }]}>
                                                     <EText style={styles.buttonText}>Log in</EText>
                                                 </View>
                                             </TouchableOpacity>

@@ -207,7 +207,7 @@ export default function Signup() {
                         { signupError && <EText style={styles.errorMessage}>{signupError}</EText>}
                         <Pressable
                             onPress={onSignup}
-                            style={{width: '100%', alignItems:'center'}}
+                            style={{width: '100%', alignItems:'center', opacity: disableSignup() ? 0.5: 1}}
                             disabled={disableSignup()}
                         >
                             {

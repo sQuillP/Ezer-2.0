@@ -1,4 +1,4 @@
-import { Keyboard, Pressable, TextInput, View } from "react-native";
+import { Keyboard, Pressable, StatusBar, TextInput, View } from "react-native";
 
 import styles from './styles/AddFriend';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -117,6 +117,7 @@ export default function AddFriend({navigation}) {
     return (
         <Pressable style={{flex: 1}} onPress={Keyboard.dismiss}>
             <SafeAreaView>
+                <StatusBar barStyle={'dark-content'}/>
                 <View style={styles.main}>
                     <View style={styles.content}>
                         <View>
