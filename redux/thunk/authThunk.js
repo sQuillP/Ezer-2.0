@@ -31,17 +31,18 @@ export const login = createAsyncThunk(
                 {params:{authType:'login'}}
             );
             const token = response.data.data;
-
             // Set the jwt token
             await AsyncStorage.setItem("TOKEN", token);
             // Now grab the user
-            const userResponse = await Ezer.get('/auth',{},{params:{authType:"getme"}});
+            const userResponse = await Ezer.get('/auth',{params:{authType:"getme"}});
             const user = userResponse.data.data;
             //Load the relations data while we're at it.
             await dispatch(getRelations());
+            console.log('from logging in', token, user);
             return {token, user};
 
         } catch(error) {
+            console.log(error);
             return rejectWithValue(error.response.status);
         }
     }

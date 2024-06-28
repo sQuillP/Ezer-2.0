@@ -10,9 +10,10 @@ import InviteList from "./InviteList";
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import CustomModal from "../../global-components/CustomModal/CustomModal";
+import { friendAction } from "../../redux/slice/friendsSlice";
 
 import { DUMMY_FRIENDS, DUMMY_INVITES } from "./dummyData";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 
 
@@ -37,6 +38,10 @@ export default function Friends() {
 
     //code for modal
     const [openModal, setOpenModal] = useState(false);
+
+    const [rejectFriendRequest, setRejectFriendRequest] = useState("");
+
+    const dispatch = useDispatch();
 
 
     /**
@@ -114,15 +119,16 @@ export default function Friends() {
     }
 
     async function rejectInvite() {
-
+        dispatch({delete_type:'invite', username:rejectFriendRequest});
     }
 
     /**
      * @description this function gets drilled down to each user
      * where we have fn -> list -> item = 2 levels of drilling.
      */
-    function onShowConfirmModal(openState) {
+    function onShowConfirmModal(openState, username) {
         setOpenModal(openState);
+        setRejectFriendRequest(username);
     }
 
     return (
@@ -137,6 +143,7 @@ export default function Friends() {
                     title={"Reject Friend Request?"}
                     confirmText={"Reject"}
                     declineText={"Cancel"}
+                    acceptAction={rejectInvite}
 
                 />
                 <StatusBar barStyle={'light-content'}/>

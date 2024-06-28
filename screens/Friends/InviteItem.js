@@ -63,7 +63,7 @@ export default function InviteItem({invite, onShowConfirmModal, sent, last=false
                         </View>
                         ): (
                             <View style={styles.btns}>
-                                <Pressable style={[{marginRight: 10}]} onPress={()=> onShowConfirmModal(true)}>
+                                <Pressable style={[{marginRight: 10}]} onPress={()=> onShowConfirmModal(true, invite.username)}>
                                     <View style={[styles.chip, {backgroundColor: palette.error}]}>
                                         <EText style={[styles.chipText]}>Reject</EText>
                                     </View>
